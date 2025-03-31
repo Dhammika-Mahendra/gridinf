@@ -4,9 +4,9 @@ import Map from "./components/Map";
 
 export default function Home() {
   return (
-    <div>
+    <div >
       This is Next
-      <Map></Map>
+      <D3Chart />
     </div>
   );
 }
