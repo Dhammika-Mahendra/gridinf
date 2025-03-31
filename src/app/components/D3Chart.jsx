@@ -32,7 +32,9 @@ const D3Chart = () => {
       .attr("width", width)
       .attr("height", height)
       .attr("viewBox", [0, 0, width, height])
-      .attr("style", "max-width: 100%; height: auto;");
+      .style("max-width", "100%")
+      .style("height", "auto")
+      .style("border", "1px solid #ccc");
 
     svg.selectAll("*").remove(); // Clear previous content
 
@@ -41,19 +43,21 @@ const D3Chart = () => {
     const nodeMap = new Map(graph.nodes.map((node) => [node.id, node]));
 
     // Draw links
-    g.append("g")
+    const link = g
+      .append("g")
       .attr("stroke", "#aaa")
+      .attr("stroke-width", 2)
       .selectAll("line")
       .data(graph.links)
       .join("line")
       .attr("x1", (d) => nodeMap.get(d.source).x)
       .attr("y1", (d) => nodeMap.get(d.source).y)
       .attr("x2", (d) => nodeMap.get(d.target).x)
-      .attr("y2", (d) => nodeMap.get(d.target).y)
-      .attr("stroke-width", 2);
+      .attr("y2", (d) => nodeMap.get(d.target).y);
 
     // Draw nodes
-    g.append("g")
+    const node = g
+      .append("g")
       .selectAll("circle")
       .data(graph.nodes)
       .join("circle")
@@ -63,7 +67,8 @@ const D3Chart = () => {
       .attr("fill", (_, i) => d3.schemeCategory10[i % 10]);
 
     // Add labels
-    g.append("g")
+    const label = g
+      .append("g")
       .selectAll("text")
       .data(graph.nodes)
       .join("text")
@@ -74,10 +79,23 @@ const D3Chart = () => {
       .style("fill", "#333");
 
     // Zoom behavior
-    const zoom = d3.zoom()
+    const zoom = d3
+      .zoom()
       .scaleExtent([0.5, 3]) // Zoom limits
       .on("zoom", (event) => {
-        g.attr("transform", event.transform);
+        const { transform } = event;
+
+        // Update positions of nodes and links based on transform
+        node.attr("cx", (d) => transform.applyX(d.x))
+            .attr("cy", (d) => transform.applyY(d.y));
+
+        link.attr("x1", (d) => transform.applyX(nodeMap.get(d.source).x))
+            .attr("y1", (d) => transform.applyY(nodeMap.get(d.source).y))
+            .attr("x2", (d) => transform.applyX(nodeMap.get(d.target).x))
+            .attr("y2", (d) => transform.applyY(nodeMap.get(d.target).y));
+
+        label.attr("x", (d) => transform.applyX(d.x) + 12)
+             .attr("y", (d) => transform.applyY(d.y) + 4);
       });
 
     svg.call(zoom);
@@ -94,7 +112,7 @@ const D3Chart = () => {
     >
       <svg
         ref={svgRef}
-        className="d3-graph"
+        className="svgClass"
         style={{
           border: "1px solid #ccc",
           width: "100%",
