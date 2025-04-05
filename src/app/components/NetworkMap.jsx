@@ -16,13 +16,16 @@ const NetworkMap = () => {
       .attr("height", height)
       .style("border", "1px solid #ccc");
 
-    svg.selectAll("*").remove();
+    svg.selectAll("*").remove(); // Clear SVG before drawing
 
-    const mapGroup = svg.append("g").attr("class", "map-group");
-    const linkGroup = svg.append("g").attr("class", "link-group");
-    const nodeGroup = svg.append("g").attr("class", "node-group");
-    const labelGroup = svg.append("g").attr("class", "label-group");
+    // Root group to apply zoom
+    const g = svg.append("g");
 
+    // Separate layers
+    const gMap = g.append("g").attr("class", "map-layer");
+    const gNetwork = g.append("g").attr("class", "network-layer");
+
+    // Projection setup
     const projection = d3.geoMercator()
       .scale(8000)
       .center([80.64, 7.66])
@@ -30,9 +33,10 @@ const NetworkMap = () => {
 
     const pathGenerator = d3.geoPath().projection(projection);
 
+    // Load GeoJSON and draw map
     d3.json("/LK.json").then((geoData) => {
       if (geoData.type === "GeometryCollection") {
-        mapGroup.selectAll(".region")
+        gMap.selectAll(".region")
           .data(geoData.geometries)
           .enter()
           .append("path")
@@ -45,6 +49,7 @@ const NetworkMap = () => {
         console.error("Expected GeometryCollection");
       }
 
+      // After map load, draw network
       drawNetwork();
     });
 
@@ -65,8 +70,9 @@ const NetworkMap = () => {
         ],
       };
 
-      const nodeMap = new Map(graph.nodes.map((node) => [node.id, node]));
+      const nodeMap = new Map(graph.nodes.map((n) => [n.id, n]));
 
+      // Project geo coords
       graph.nodes.forEach((node) => {
         const [x, y] = projection(node.coords);
         node.x = x;
@@ -74,7 +80,9 @@ const NetworkMap = () => {
       });
 
       // Draw links
-      linkGroup.selectAll("line")
+      gNetwork.append("g")
+        .attr("class", "links")
+        .selectAll("line")
         .data(graph.links)
         .enter()
         .append("line")
@@ -86,7 +94,9 @@ const NetworkMap = () => {
         .attr("stroke-width", 2);
 
       // Draw nodes
-      const nodes = nodeGroup.selectAll("circle")
+      const nodeCircles = gNetwork.append("g")
+        .attr("class", "nodes")
+        .selectAll("circle")
         .data(graph.nodes)
         .enter()
         .append("circle")
@@ -95,8 +105,19 @@ const NetworkMap = () => {
         .attr("r", 8)
         .attr("fill", (_, i) => d3.schemeCategory10[i % 10]);
 
+      // Hover effect
+      nodeCircles
+        .on("mouseover", function () {
+          d3.select(this).transition().duration(200).attr("r", 12);
+        })
+        .on("mouseout", function () {
+          d3.select(this).transition().duration(200).attr("r", 8);
+        });
+
       // Draw labels
-      labelGroup.selectAll("text")
+      gNetwork.append("g")
+        .attr("class", "labels")
+        .selectAll("text")
         .data(graph.nodes)
         .enter()
         .append("text")
@@ -107,34 +128,28 @@ const NetworkMap = () => {
         .style("fill", "#000");
     };
 
+    // Zoom and pan
     const zoom = d3.zoom()
       .scaleExtent([1, 8])
       .on("zoom", (event) => {
-        // Only zoom map and links
-        mapGroup.attr("transform", event.transform);
-        linkGroup.attr("transform", event.transform);
+        g.attr("transform", event.transform);
 
-        // Keep node positions fixed and inverse scale their size for semantic zoom
-        nodeGroup.selectAll("circle")
-          .attr("transform", event.transform.toString())
-          .attr("r", 8 / event.transform.k);
-
-        labelGroup.selectAll("text")
-          .attr("transform", event.transform.toString())
-          .style("font-size", `${12 / event.transform.k}px`);
-
-        linkGroup.selectAll("line")
-          .attr("stroke-width", 2 / event.transform.k);
+        // Semantic zoom (optional)
+        const k = event.transform.k;
+        gNetwork.selectAll("circle").attr("r", 8 / k);
+        gNetwork.selectAll("text").style("font-size", `${12 / k}px`);
+        gNetwork.selectAll("line").attr("stroke-width", 2 / k);
       });
 
     svg.call(zoom);
 
+    // Prevent scroll wheel page scroll
     svg.on("wheel", (event) => event.preventDefault(), { passive: false });
   }, []);
 
   return (
     <div style={{ touchAction: "none" }}>
-      <svg ref={svgRef}></svg>
+      <svg className="SVGelement" ref={svgRef}></svg>
     </div>
   );
 };

@@ -28,3 +28,7 @@ body {
 .svgClass {
   background-color: #feeefe;
 }
+
+.SVGelement {
+  will-change: transform;
+}
