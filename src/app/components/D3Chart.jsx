@@ -7,23 +7,22 @@ const D3Chart = () => {
   const svgRef = useRef(null);
 
   useEffect(() => {
-    const width = 600;
-    const height = 400;
+    const width = 350;
+    const height = 600;
 
     const graph = {
       nodes: [
-        { id: "A", x: 100, y: 100 },
-        { id: "B", x: 300, y: 100 },
-        { id: "C", x: 200, y: 200 },
-        { id: "D", x: 400, y: 200 },
-        { id: "E", x: 300, y: 300 },
+        { id: "A", x: 100, y: 300 },
+        { id: "B", x: 300, y: 300 },
+        { id: "C", x: 200, y: 400 },
+        { id: "D", x: 300, y: 200 },
+        { id: "E", x: 300, y: 500 },
       ],
       links: [
         { source: "A", target: "B" },
         { source: "A", target: "C" },
         { source: "B", target: "D" },
-        { source: "C", target: "D" },
-        { source: "D", target: "E" },
+        { source: "A", target: "E" }
       ],
     };
 
@@ -37,6 +36,7 @@ const D3Chart = () => {
       .style("border", "1px solid #ccc");
 
     svg.selectAll("*").remove(); // Clear previous content
+    
 
     const g = svg.append("g");
 
@@ -65,6 +65,19 @@ const D3Chart = () => {
       .attr("cy", (d) => d.y)
       .attr("r", 10)
       .attr("fill", (_, i) => d3.schemeCategory10[i % 10]);
+
+      node.on("mouseover", function () {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("r", 15); // Increase radius on hover
+      })
+      .on("mouseout", function () {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("r", 10); // Revert to original radius
+      });
 
     // Add labels
     const label = g
@@ -108,13 +121,12 @@ const D3Chart = () => {
   return (
     <div
       className="graph-container"
-      style={{ width: "600px", height: "400px", overflow: "hidden", border: "1px solid #ccc" }}
+      style={{ width: "350px", height: "600px", overflow: "hidden", border: "1px solid #000" }}
     >
       <svg
         ref={svgRef}
         className="svgClass"
         style={{
-          border: "1px solid #ccc",
           width: "100%",
           height: "100%",
         }}
