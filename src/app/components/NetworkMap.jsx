@@ -1,12 +1,40 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
 const NetworkMap = () => {
   const svgRef = useRef(null);
+  const [networkData, setNetworkData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Fetch the network data from external JSON file
+    const fetchNetworkData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch("/data.json"); // Path to your network data JSON
+        if (!response.ok) {
+          throw new Error(`Failed to fetch network data: ${response.status}`);
+        }
+        const data = await response.json();
+        setNetworkData(data);
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error fetching network data:", err);
+        setError(err.message);
+        setIsLoading(false);
+      }
+    };
+
+    fetchNetworkData();
+  }, []);
+
+  useEffect(() => {
+    // Only render the visualization when network data is available
+    if (!networkData || isLoading) return;
+
     const width = 350;
     const height = 600;
 
@@ -54,20 +82,18 @@ const NetworkMap = () => {
     });
 
     const drawNetwork = () => {
+      // Process nodes - transform lat/lon format from JSON to coordinates format
+      const processedNodes = networkData.nodes.map(node => ({
+        id: node.id,
+        coords: [node.lon, node.lat], // Note: order is [longitude, latitude]
+        color: node.color || null,
+        size: node.size ,
+        label: node.label || node.id
+      }));
+
       const graph = {
-        nodes: [
-          { id: "A", coords: [79.84, 6.90] },
-          { id: "B", coords: [80.4, 7.1] },
-          { id: "C", coords: [80.5, 8.2] },
-          { id: "D", coords: [80.51, 6.9] },
-          { id: "E", coords: [80.12, 7.7] },
-        ],
-        links: [
-          { source: "A", target: "B" },
-          { source: "A", target: "C" },
-          { source: "B", target: "D" },
-          { source: "A", target: "E" },
-        ],
+        nodes: processedNodes,
+        links: networkData.links
       };
 
       const nodeMap = new Map(graph.nodes.map((n) => [n.id, n]));
@@ -90,8 +116,8 @@ const NetworkMap = () => {
         .attr("y1", (d) => nodeMap.get(d.source).y)
         .attr("x2", (d) => nodeMap.get(d.target).x)
         .attr("y2", (d) => nodeMap.get(d.target).y)
-        .attr("stroke", "#aaa")
-        .attr("stroke-width", 2);
+        .attr("stroke", (d) => d.color || "#aaa")
+        .attr("stroke-width", (d) => d.width || 2);
 
       // Draw nodes
       const nodeCircles = gNetwork.append("g")
@@ -102,16 +128,16 @@ const NetworkMap = () => {
         .append("circle")
         .attr("cx", (d) => d.x)
         .attr("cy", (d) => d.y)
-        .attr("r", 8)
-        .attr("fill", (_, i) => d3.schemeCategory10[i % 10]);
+        .attr("r", (d) => d.size)
+        .attr("fill", (d, i) => d.color || d3.schemeCategory10[i % 10]);
 
       // Hover effect
       nodeCircles
-        .on("mouseover", function () {
-          d3.select(this).transition().duration(200).attr("r", 12);
+        .on("mouseover", function (event, d) {
+          d3.select(this).transition().duration(200).attr("r", d.size * 1.5);
         })
-        .on("mouseout", function () {
-          d3.select(this).transition().duration(200).attr("r", 8);
+        .on("mouseout", function (event, d) {
+          d3.select(this).transition().duration(200).attr("r", d.size);
         });
 
       // Draw labels
@@ -123,7 +149,7 @@ const NetworkMap = () => {
         .append("text")
         .attr("x", (d) => d.x + 10)
         .attr("y", (d) => d.y + 5)
-        .text((d) => d.id)
+        .text((d) => d.label)
         .style("font-size", "12px")
         .style("fill", "#000");
     };
@@ -136,16 +162,24 @@ const NetworkMap = () => {
 
         // Semantic zoom (optional)
         const k = event.transform.k;
-        gNetwork.selectAll("circle").attr("r", 8 / k);
+        gNetwork.selectAll("circle").attr("r", (d) => d.size / k);
         gNetwork.selectAll("text").style("font-size", `${12 / k}px`);
-        gNetwork.selectAll("line").attr("stroke-width", 2 / k);
+        gNetwork.selectAll("line").attr("stroke-width", (d) => (d.width || 2) / k);
       });
 
     svg.call(zoom);
 
     // Prevent scroll wheel page scroll
     svg.on("wheel", (event) => event.preventDefault(), { passive: false });
-  }, []);
+  }, [networkData, isLoading]);
+
+  if (error) {
+    return <div>Error loading network data: {error}</div>;
+  }
+
+  if (isLoading) {
+    return <div>Loading network data...</div>;
+  }
 
   return (
     <div style={{ touchAction: "none" }}>

@@ -1,0 +1,71 @@
+{
+    "nodes": [
+      {
+        "id": "A",
+        "lat": 6.90,
+        "lon": 79.84,
+        "color": "blue",
+        "size": 6,
+        "label": "A"
+      },
+      {
+        "id": "B",
+        "lat": 7.10,
+        "lon": 80.40,
+        "color": "",
+        "size": 0,
+        "label": ""
+      },
+      {
+        "id": "C",
+        "lat": 8.20,
+        "lon": 80.50,
+        "color": "red",
+        "size": 4,
+        "label": "C"
+      },
+      {
+        "id": "D",
+        "lat": 6.90,
+        "lon": 80.51,
+        "color": "yellow",
+        "size": 3,
+        "label": "D"
+      },
+      {
+        "id": "E",
+        "lat": 7.70,
+        "lon": 80.12,
+        "color": "purple",
+        "size": 2,
+        "label": "E"
+      }
+    ],
+    "links": [
+      {
+        "source": "A",
+        "target": "B",
+        "color": "red",
+        "width": 2
+      },
+      {
+        "source": "A",
+        "target": "C",
+        "color": "red",
+        "width": 2
+      },
+      {
+        "source": "B",
+        "target": "D",
+        "color": "blue",
+        "width": 1
+      },
+      {
+        "source": "A",
+        "target": "E",
+        "color": "blue",
+        "width": 1
+      }
+    ]
+  }
+  
