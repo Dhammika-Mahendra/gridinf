@@ -35,8 +35,8 @@ const NetworkMap = () => {
     // Only render the visualization when network data is available
     if (!networkData || isLoading) return;
 
-    const width = 350;
-    const height = 600;
+    const width = window.innerWidth*0.6;
+    const height = window.innerHeight;
 
     const svg = d3
       .select(svgRef.current)
@@ -57,7 +57,7 @@ const NetworkMap = () => {
     const projection = d3.geoMercator()
       .scale(8000)
       .center([80.64, 7.66])
-      .translate([165, 330]);
+      .translate([width/2, height/2]);
 
     const pathGenerator = d3.geoPath().projection(projection);
 
@@ -182,8 +182,8 @@ const NetworkMap = () => {
   }
 
   return (
-    <div style={{ touchAction: "none" }}>
-      <svg className="SVGelement" ref={svgRef}></svg>
+    <div style={{ touchAction: "none", display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <svg className="SVGelement" ref={svgRef} style={{ width: "60%", height: "100%" }}></svg>
     </div>
   );
 };

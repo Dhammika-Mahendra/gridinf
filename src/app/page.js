@@ -6,7 +6,6 @@ import NetworkMap from "./components/NetworkMap";
 export default function Home() {
   return (
     <div >
-      This is Next
       <NetworkMap></NetworkMap>
     </div>
   );
