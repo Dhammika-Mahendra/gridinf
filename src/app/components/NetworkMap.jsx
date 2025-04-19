@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
+import rewind from '@turf/rewind';
 
 const NetworkMap = () => {
   const svgRef = useRef(null);
@@ -14,7 +15,7 @@ const NetworkMap = () => {
     const fetchNetworkData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("/data.json"); // Path to your network data JSON
+        const response = await fetch("data.json"); // Path to your network data JSON
         if (!response.ok) {
           throw new Error(`Failed to fetch network data: ${response.status}`);
         }
@@ -62,19 +63,24 @@ const NetworkMap = () => {
     const pathGenerator = d3.geoPath().projection(projection);
 
     // Load GeoJSON and draw map
-    d3.json("/LK.json").then((geoData) => {
-      if (geoData.type === "GeometryCollection") {
+    d3.json("/MergedMap.json").then((data) => {
+      if (data.type === "FeatureCollection") {
+        // Rewind each feature to ensure correct winding order
+        const correctedFeatures = data.features.map(feature => rewind(feature, { reverse: true }));
+        const correctedData = { ...data, features: correctedFeatures };
+    
         gMap.selectAll(".region")
-          .data(geoData.geometries)
+          .data(correctedData.features)
           .enter()
           .append("path")
           .attr("class", "region")
           .attr("d", pathGenerator)
           .style("fill", "#eee")
           .style("stroke", "#222")
-          .style("stroke-width", 0.5);
+          .style("stroke-width", 0.2)
+          .style("fill", d => d.properties.fid == 22 ? "#f00" : "#eee");
       } else {
-        console.error("Expected GeometryCollection");
+        console.error("Expected GeoJSON of type FeatureCollection, but got:", data.type);
       }
 
       // After map load, draw network
@@ -132,26 +138,26 @@ const NetworkMap = () => {
         .attr("fill", (d, i) => d.color || d3.schemeCategory10[i % 10]);
 
       // Hover effect
-      nodeCircles
-        .on("mouseover", function (event, d) {
-          d3.select(this).transition().duration(200).attr("r", d.size * 1.5);
-        })
-        .on("mouseout", function (event, d) {
-          d3.select(this).transition().duration(200).attr("r", d.size);
-        });
+      // nodeCircles
+      //   .on("mouseover", function (event, d) {
+      //     d3.select(this).transition().duration(200).attr("r", d.size * 1.5);
+      //   })
+      //   .on("mouseout", function (event, d) {
+      //     d3.select(this).transition().duration(200).attr("r", d.size);
+      //   });
 
       // Draw labels
-      gNetwork.append("g")
-        .attr("class", "labels")
-        .selectAll("text")
-        .data(graph.nodes)
-        .enter()
-        .append("text")
-        .attr("x", (d) => d.x + 10)
-        .attr("y", (d) => d.y + 5)
-        .text((d) => d.label)
-        .style("font-size", "12px")
-        .style("fill", "#000");
+      // gNetwork.append("g")
+      //   .attr("class", "labels")
+      //   .selectAll("text")
+      //   .data(graph.nodes)
+      //   .enter()
+      //   .append("text")
+      //   .attr("x", (d) => d.x + 1)
+      //   .attr("y", (d) => d.y + 1)
+      //   .text((d) => d.label)
+      //   .style("font-size", "12px")
+      //   .style("fill", "#000");
     };
 
     // Zoom and pan

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import rewind from '@turf/rewind';
 
 const Map = () => {
   const svgRef = useRef(null);
@@ -43,18 +44,24 @@ const Map = () => {
     });
 
     // Load your GeoJSON data
-    d3.json("/LK.json").then((data) => {
-      if (data.type === "GeometryCollection") {
+    d3.json("/MergedMap.json").then((data) => {
+      if (data.type === "FeatureCollection") {
+        // Rewind each feature to ensure correct winding order
+        const correctedFeatures = data.features.map(feature => rewind(feature, { reverse: true }));
+        const correctedData = { ...data, features: correctedFeatures };
+    
         mapGroup.selectAll(".region")
-          .data(data.geometries)
-          .enter().append("path")
+          .data(correctedData.features)
+          .enter()
+          .append("path")
           .attr("class", "region")
           .attr("d", path)
           .style("fill", "#eee")
           .style("stroke", "#222")
-          .style("stroke-width", 0.5);
+          .style("stroke-width", 0.2)
+          .style("fill", d => d.properties.fid == 22 ? "#f00" : "#eee");
       } else {
-        console.error("Expected GeoJSON of type GeometryCollection, but got:", data.type);
+        console.error("Expected GeoJSON of type FeatureCollection, but got:", data.type);
       }
     });
 

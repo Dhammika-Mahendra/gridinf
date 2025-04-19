@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@turf/turf": "^7.2.0",
     "d3": "^7.9.0",
     "d3-geo": "^3.1.1",
     "d3-geo-projection": "^4.0.0",
