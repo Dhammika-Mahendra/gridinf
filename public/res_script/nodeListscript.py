@@ -21,10 +21,21 @@ def convert_csv_to_json(csv_file_path, json_file_path):
             node = {
                 "id": row["id"],
                 "lat": float(row["Y"]),
-                "lon": float(row["X"] if "X" in row else row["ï»¿X"]),  # Handle both possible column names
-                "color": "blue",
-                "size": 4,
-                "label": row["id"]
+                "lon": float(row["X"] if "X" in row else row["ï»¿X"]),
+                "color": "" if row["Type"] == "p" else 
+                         "" if row["Type"] == "p2" else
+                         "#FFB200" if row["Type"] == "g" else 
+                         "#EB5B00" if row["Type"] == "g2" else 
+                         "#D91656" if row["Type"] == "g3" else 
+                         "#FA4032" if row["Type"] == "g4" else 
+                         "#0595f5" if row["Type"] == "hp" else 
+                         "#754a61" if row["Type"] == "tp" else "blue",
+                "size": 0 if row["Type"] == "p" else 
+                        0 if row["Type"] == "p2" else
+                        4 ,
+                "label": "" if row["Type"] in ["p", "p2"] else row["id"],
+                "type": row["Type"],
+                "name": row["Name"]
             }
             
             # Add the node to our list

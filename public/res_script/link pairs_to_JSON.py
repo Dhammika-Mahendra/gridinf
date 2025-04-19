@@ -17,8 +17,10 @@ with open(csv_input_file, 'r') as csvfile:
         json_data.append({
             "source": row['First'],
             "target": row['Second'],
-            "color": "green",
-            "width": 1
+            "color": "#1d9100" if row['Type'] == "220" else
+                    "#15ff00" if row['Type'] == "132" else "",
+            "width": 2 if row['Type'] == "220" else 1,
+            "type": row['Type'] 
         })
 
 # Write to JSON file

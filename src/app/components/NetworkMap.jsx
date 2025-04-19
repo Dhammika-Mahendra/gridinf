@@ -65,7 +65,6 @@ const NetworkMap = () => {
     // Load GeoJSON and draw map
     d3.json("/MergedMap.json").then((data) => {
       if (data.type === "FeatureCollection") {
-        // Rewind each feature to ensure correct winding order
         const correctedFeatures = data.features.map(feature => rewind(feature, { reverse: true }));
         const correctedData = { ...data, features: correctedFeatures };
     
@@ -78,7 +77,7 @@ const NetworkMap = () => {
           .style("fill", "#eee")
           .style("stroke", "#222")
           .style("stroke-width", 0.2)
-          .style("fill", d => d.properties.fid == 22 ? "#f00" : "#eee");
+          .style("fill", d => d.properties.fid == 22 ? "#a7a8a7" : "#eee");
       } else {
         console.error("Expected GeoJSON of type FeatureCollection, but got:", data.type);
       }
@@ -94,7 +93,7 @@ const NetworkMap = () => {
         coords: [node.lon, node.lat], // Note: order is [longitude, latitude]
         color: node.color || null,
         size: node.size ,
-        label: node.label || node.id
+        label: node.label || "",
       }));
 
       const graph = {
@@ -147,17 +146,17 @@ const NetworkMap = () => {
       //   });
 
       // Draw labels
-      // gNetwork.append("g")
-      //   .attr("class", "labels")
-      //   .selectAll("text")
-      //   .data(graph.nodes)
-      //   .enter()
-      //   .append("text")
-      //   .attr("x", (d) => d.x + 1)
-      //   .attr("y", (d) => d.y + 1)
-      //   .text((d) => d.label)
-      //   .style("font-size", "12px")
-      //   .style("fill", "#000");
+      gNetwork.append("g")
+        .attr("class", "labels")
+        .selectAll("text")
+        .data(graph.nodes)
+        .enter()
+        .append("text")
+        .attr("x", (d) => d.x + 1)
+        .attr("y", (d) => d.y + 1)
+        .text((d) => d.label)
+        .style("font-size", "12px")
+        .style("fill", "#000");
     };
 
     // Zoom and pan

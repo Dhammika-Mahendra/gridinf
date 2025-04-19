@@ -2,511 +2,596 @@
     {
         "source": "63",
         "target": "54",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "54",
         "target": "61",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "61",
         "target": "88",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "88",
         "target": "89",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "89",
         "target": "119",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "119",
         "target": "120",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "120",
         "target": "126",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "89",
         "target": "90",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "61",
         "target": "4",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "58",
         "target": "60",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "60",
         "target": "59",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "61",
         "target": "79",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "79",
         "target": "80",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "80",
         "target": "78",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "80",
         "target": "99",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "99",
         "target": "100",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "100",
         "target": "154",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "154",
         "target": "156",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "156",
         "target": "158",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "158",
         "target": "159",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "159",
         "target": "160",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "160",
         "target": "169",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "169",
         "target": "197",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "197",
         "target": "151",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "89",
         "target": "121",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "121",
         "target": "122",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "122",
         "target": "138",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "138",
         "target": "143",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "143",
         "target": "142",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "142",
         "target": "151",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "151",
         "target": "177",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "177",
         "target": "180",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "180",
         "target": "184",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "184",
         "target": "185",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "185",
         "target": "186",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "186",
         "target": "187",
-        "color": "green",
-        "width": 1
+        "color": "#1d9100",
+        "width": 2,
+        "type": "220"
     },
     {
         "source": "187",
         "target": "189",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "193",
         "target": "192",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "192",
         "target": "191",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "191",
         "target": "190",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "190",
         "target": "188",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "188",
         "target": "196",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "196",
         "target": "182",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "182",
         "target": "181",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "181",
         "target": "178",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "178",
         "target": "151",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "151",
         "target": "170",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "170",
         "target": "171",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "171",
         "target": "172",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "172",
         "target": "173",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "173",
         "target": "174",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "174",
         "target": "176",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "174",
         "target": "179",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "151",
         "target": "168",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "151",
         "target": "167",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "167",
         "target": "152",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "152",
         "target": "144",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "144",
         "target": "145",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "145",
         "target": "146",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "146",
         "target": "147",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "147",
         "target": "148",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "148",
         "target": "149",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "149",
         "target": "150",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "167",
         "target": "166",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "166",
         "target": "161",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "161",
         "target": "162",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "162",
         "target": "163",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "163",
         "target": "164",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "164",
         "target": "165",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "161",
         "target": "157",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "157",
         "target": "155",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "155",
         "target": "154",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "154",
         "target": "153",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "154",
-        "target": "988",
-        "color": "green",
-        "width": 1
+        "target": "98",
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
-        "source": "988",
+        "source": "98",
         "target": "96",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "96",
         "target": "95",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "95",
         "target": "92",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "92",
         "target": "93",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "93",
         "target": "91",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "91",
         "target": "80",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "80",
         "target": "77",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "77",
         "target": "76",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "76",
         "target": "1",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "96",
         "target": "97",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     },
     {
         "source": "93",
         "target": "94",
-        "color": "green",
-        "width": 1
+        "color": "#15ff00",
+        "width": 1,
+        "type": "132"
     }
 ]
