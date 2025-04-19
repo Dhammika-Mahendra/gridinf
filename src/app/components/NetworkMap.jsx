@@ -36,7 +36,7 @@ const NetworkMap = () => {
     // Only render the visualization when network data is available
     if (!networkData || isLoading) return;
 
-    const width = window.innerWidth*0.6;
+    const width = window.innerWidth*0.5;
     const height = window.innerHeight;
 
     const svg = d3
@@ -183,12 +183,14 @@ const NetworkMap = () => {
   }
 
   if (isLoading) {
-    return <div>Loading network data...</div>;
+    return <div style={{ touchAction: "none", display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" , width: "50vw",backgroundColor:"f8f8f8"}}>
+        <p>Loading network data...</p>
+      </div>
   }
 
   return (
-    <div style={{ touchAction: "none", display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-        <svg className="SVGelement" ref={svgRef} style={{ width: "60%", height: "100%" }}></svg>
+    <div style={{ touchAction: "none", display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" , width: "50vw"}}>
+        <svg className="SVGelement" ref={svgRef} style={{ width: "100%", height: "100%" , backgroundColor:"f8f8f8"}}></svg>
     </div>
   );
 };
