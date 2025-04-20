@@ -183,14 +183,16 @@ const NetworkMap = () => {
   }
 
   if (isLoading) {
-    return <div style={{ touchAction: "none", display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" , width: "50vw",backgroundColor:"f8f8f8"}}>
+    return (
+      <div className="touch-none flex justify-center items-center h-screen w-1/2 bg-[#f8f8f8]">
         <p>Loading network data...</p>
       </div>
+    );
   }
 
   return (
-    <div style={{ touchAction: "none", display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" , width: "50vw"}}>
-        <svg className="SVGelement" ref={svgRef} style={{ width: "100%", height: "100%" , backgroundColor:"f8f8f8"}}></svg>
+    <div className="touch-none flex justify-center items-center h-screen w-1/2">
+      <svg className="SVGelement w-full h-full bg-[#f8f8f8]" ref={svgRef}></svg>
     </div>
   );
 };

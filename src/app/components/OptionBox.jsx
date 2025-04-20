@@ -13,24 +13,13 @@ const regions = [
   'Area',
 ];
 
-  return (
-    <div style={{backgroundColor: "#f2f2f2", width:"20%"}}>
-      <h2>Regional Level:</h2>
-      <div>
-        {regions.map((region) => (
-          <label key={region}>
-            <input
-              type="radio"
-              name="region"
-              value={region}
-              checked={regionLevel === region}
-              onChange={() => setRegionLevel(region)}
-              className="hidden"
-            />
-            {region}
-          </label>
-        ))}
-      </div>
-    </div>
-  );
+return (
+  <div className='w-[20vw]' style={{padding:'10px'}}>
+    <select defaultValue="Pick a text editor">
+      <option>VScode</option>
+      <option>VScode fork</option>
+      <option>Another VScode fork</option>
+    </select>
+  </div>
+);
 }
