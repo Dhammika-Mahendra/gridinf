@@ -63,7 +63,7 @@ const NetworkMap = () => {
     const pathGenerator = d3.geoPath().projection(projection);
 
     // Load GeoJSON and draw map
-    d3.json("/MergedMap.json").then((data) => {
+    d3.json("/Map.json").then((data) => {
       if (data.type === "FeatureCollection") {
         const correctedFeatures = data.features.map(feature => rewind(feature, { reverse: true }));
         const correctedData = { ...data, features: correctedFeatures };
@@ -152,8 +152,8 @@ const NetworkMap = () => {
         .data(graph.nodes)
         .enter()
         .append("text")
-        .attr("x", (d) => d.x + 1)
-        .attr("y", (d) => d.y + 1)
+        .attr("x", (d) => d.x + 0.2)
+        .attr("y", (d) => d.y + 0.2)
         .text((d) => d.label)
         .style("font-size", "12px")
         .style("fill", "#000");
@@ -161,7 +161,7 @@ const NetworkMap = () => {
 
     // Zoom and pan
     const zoom = d3.zoom()
-      .scaleExtent([1, 8])
+      .scaleExtent([1, 20])
       .on("zoom", (event) => {
         g.attr("transform", event.transform);
 

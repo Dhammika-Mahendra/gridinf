@@ -20,8 +20,8 @@ def convert_csv_to_json(csv_file_path, json_file_path):
             # Create a node object with the specified format
             node = {
                 "id": row["id"],
-                "lat": float(row["Y"]),
-                "lon": float(row["X"] if "X" in row else row["ï»¿X"]),
+                "lat": round(float(row["Y"]), 5),
+                "lon": round(float(row["X"] if "X" in row else row["ï»¿X"]), 5),
                 "color": "" if row["Type"] == "p" else 
                          "" if row["Type"] == "p2" else
                          "#FFB200" if row["Type"] == "g" else 
