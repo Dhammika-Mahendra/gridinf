@@ -14,12 +14,17 @@ const regions = [
 ];
 
 return (
-  <div className='w-[20vw]' style={{padding:'10px'}}>
+  <div className='w-[20vw] p-[10px] bg-gray-100'>
     <select defaultValue="Pick a text editor">
       <option>VScode</option>
       <option>VScode fork</option>
       <option>Another VScode fork</option>
     </select>
+
+    <ul className="menu menu-sm bg-base-200 rounded-box w-56">
+      <li><a>Small 1</a></li>
+      <li><a>Small 2</a></li>
+    </ul>
   </div>
 );
 }

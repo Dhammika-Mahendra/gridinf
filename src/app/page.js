@@ -19,7 +19,6 @@ export default function Home() {
         }}
       >
       <GraphBox></GraphBox>
-      <NetworkMap></NetworkMap>
       <OptionBox></OptionBox>
     </div>
   );
