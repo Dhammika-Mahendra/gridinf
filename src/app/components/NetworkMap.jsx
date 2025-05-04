@@ -4,11 +4,13 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import rewind from '@turf/rewind';
 
-const NetworkMap = () => {
+const NetworkMap = ({options}) => {
   const svgRef = useRef(null);
   const [networkData, setNetworkData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentTransform, setCurrentTransform] = useState(d3.zoomIdentity);
+
 
   useEffect(() => {
     // Fetch the network data from external JSON file
@@ -63,6 +65,9 @@ const NetworkMap = () => {
     const pathGenerator = d3.geoPath().projection(projection);
 
     // Load GeoJSON and draw map
+
+    const colorCode ={1: "#C0C0C0", 2: "#A9A9A9", 3: "#B2BEB5", 4: "#D7D7D7", "LECO": "#808080"};
+
     d3.json("/Map.json").then((data) => {
       if (data.type === "FeatureCollection") {
         const correctedFeatures = data.features.map(feature => rewind(feature, { reverse: true }));
@@ -76,8 +81,11 @@ const NetworkMap = () => {
           .attr("d", pathGenerator)
           .style("fill", "#eee")
           .style("stroke", "#222")
-          .style("stroke-width", 0.2)
-          .style("fill", d => d.properties.fid == 22 ? "#a7a8a7" : "#eee");
+          .style("stroke-width", 0.1)
+          .style("fill", d => {
+            let divCode = d.properties.Division_Code;
+            return colorCode[divCode] || "#eee";
+          });
       } else {
         console.error("Expected GeoJSON of type FeatureCollection, but got:", data.type);
       }
@@ -122,7 +130,7 @@ const NetworkMap = () => {
         .attr("x2", (d) => nodeMap.get(d.target).x)
         .attr("y2", (d) => nodeMap.get(d.target).y)
         .attr("stroke", (d) => d.color || "#aaa")
-        .attr("stroke-width", (d) => d.width || 2);
+        .attr("stroke-width", (d) => (d.width || 2)/currentTransform.k);
 
       // Draw nodes
       const nodeCircles = gNetwork.append("g")
@@ -133,7 +141,7 @@ const NetworkMap = () => {
         .append("circle")
         .attr("cx", (d) => d.x)
         .attr("cy", (d) => d.y)
-        .attr("r", (d) => d.size)
+        .attr("r", (d) => d.size / currentTransform.k)
         .attr("fill", (d, i) => d.color || d3.schemeCategory10[i % 10]);
 
       // Hover effect
@@ -146,7 +154,8 @@ const NetworkMap = () => {
       //   });
 
       // Draw labels
-      gNetwork.append("g")
+      if(options.showLabels){
+        gNetwork.append("g")
         .attr("class", "labels")
         .selectAll("text")
         .data(graph.nodes)
@@ -155,28 +164,33 @@ const NetworkMap = () => {
         .attr("x", (d) => d.x + 0.2)
         .attr("y", (d) => d.y + 0.2)
         .text((d) => d.label)
-        .style("font-size", "12px")
+        .style("font-size", `${12 / currentTransform.k}px`)
         .style("fill", "#000");
+      }
+
     };
+
 
     // Zoom and pan
     const zoom = d3.zoom()
       .scaleExtent([1, 20])
       .on("zoom", (event) => {
         g.attr("transform", event.transform);
-
         // Semantic zoom (optional)
         const k = event.transform.k;
         gNetwork.selectAll("circle").attr("r", (d) => d.size / k);
         gNetwork.selectAll("text").style("font-size", `${12 / k}px`);
         gNetwork.selectAll("line").attr("stroke-width", (d) => (d.width || 2) / k);
+        setCurrentTransform(event.transform);
       });
 
+
     svg.call(zoom);
+    svg.call(zoom.transform, currentTransform);
 
     // Prevent scroll wheel page scroll
     svg.on("wheel", (event) => event.preventDefault(), { passive: false });
-  }, [networkData, isLoading]);
+  }, [networkData, isLoading, options.showLabels]);
 
   if (error) {
     return <div>Error loading network data: {error}</div>;

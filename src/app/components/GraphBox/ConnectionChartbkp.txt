@@ -1,0 +1,243 @@
+import { useRef, useEffect } from 'react';
+import * as d3 from 'd3';
+
+export default function ConnectionChart({data}) {
+  const svgRef = useRef(null);
+
+  useEffect(() => {
+    // Clear any existing chart
+    d3.select(svgRef.current).selectAll("*").remove();
+
+    // Define fixed heights for each dimension
+    const dimensionHeights = {
+      "dim1": 300,
+      "dim2": 400,
+      "dim3": 250
+    };
+
+    // Sample data with connection values as distances from top instead of scaled values
+
+
+    // Chart dimensions
+    const margin = { top: 60, right: 100, bottom: 30, left: 100 };
+    const width = parseInt(window.innerWidth * 0.3) - margin.left - margin.right;
+    const height = 500 - margin.top - margin.bottom;
+
+    // Create SVG element
+    const svg = d3.select(svgRef.current)
+      .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+      .append("g")
+      .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    // Define dimensions for parallel coordinates
+    const dimensions = ["dim1", "dim2", "dim3"];
+
+    // Build the X scale (horizontal spacing between dimension lines)
+    const x = d3.scalePoint()
+      .range([0, width])
+      .domain(dimensions);
+
+    // Add vertical dimension lines with specified heights
+    for (const dimension of dimensions) {
+      const dimHeight = dimensionHeights[dimension];
+      
+      // Create a vertical line for each dimension
+      svg.append("line")
+        .attr("x1", x(dimension))
+        .attr("y1", 0)
+        .attr("x2", x(dimension))
+        .attr("y2", dimHeight)
+        .attr("class", "dimension-line")
+        .attr("data-name", dimension)
+        .attr("data-height", dimHeight)
+        .style("stroke", "#000")
+        .style("stroke-width", 3)
+        .style("opacity", 0.7)
+        .style("cursor", "pointer")
+        // .on("mouseover", function() {
+        //   d3.select(this).style("stroke-width", 6);
+        //   console.log("Hovering dimension:", d3.select(this).attr("data-name"), 
+        //               "Height:", d3.select(this).attr("data-height") + "px");
+        // })
+        // .on("mouseout", function() {
+        //   d3.select(this).style("stroke-width", 3);
+        // });
+        
+      // Add dimension labels and height info
+      svg.append("text")
+        .attr("x", x(dimension))
+        .attr("y", -20)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#000")
+        .style("font-weight", "bold")
+        .text(dimension);
+        
+      svg.append("text")
+        .attr("x", x(dimension))
+        .attr("y", -5)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#666")
+        .style("font-size", "10px")
+        .text(`Height: ${dimHeight}px`);
+    }
+
+    // Draw connecting lines, icons, and labels
+    data.forEach((d, i) => {
+      const color = d3.schemeCategory10[i % 10];
+      
+      // Process each segment
+      d.segments.forEach(segment => {
+        const fromDim = segment.from;
+        const toDim = segment.to;
+        const iconPosition = segment.iconPosition || "none";
+        const label = segment.label || "";
+        const labelPosition = segment.labelPosition || 0.5;
+        const segmentName = segment.name || `segment-${d.id}-${fromDim}-${toDim}`;
+        
+        // Line endpoints - now using direct pixel positions from the top
+        const x1 = x(fromDim);
+        const y1 = d[fromDim]; // Direct pixel position
+        const x2 = x(toDim);
+        const y2 = d[toDim]; // Direct pixel position
+        
+        // Draw the connection line
+        svg.append("line")
+          .attr("x1", x1)
+          .attr("y1", y1)
+          .attr("x2", x2)
+          .attr("y2", y2)
+          .attr("class", "connection-line")
+          .attr("data-name", segmentName)
+          .attr("data-from-dim", fromDim)
+          .attr("data-to-dim", toDim)
+          .attr("data-from-pos", y1)
+          .attr("data-to-pos", y2)
+          .style("stroke", color)
+          .style("stroke-width", 2)
+          .style("opacity", 0.8)
+          .style("cursor", "pointer")
+          // .on("mouseover", function() {
+          //   d3.select(this).style("stroke-width", 4);
+          //   const fromDim = d3.select(this).attr("data-from-dim");
+          //   const toDim = d3.select(this).attr("data-to-dim");
+          //   const fromPos = d3.select(this).attr("data-from-pos");
+          //   const toPos = d3.select(this).attr("data-to-pos");
+          //   console.log(`Line: ${segmentName} | ${fromDim}:${fromPos}px to ${toDim}:${toPos}px`);
+          // })
+          // .on("mouseout", function() {
+          //   d3.select(this).style("stroke-width", 2);
+          // });
+        
+        // Calculate icon position based on specified placement
+        let iconX, iconY;
+        
+        switch(iconPosition) {
+          case "start":
+            iconX = x1;
+            iconY = y1;
+            break;
+          case "middle":
+            iconX = (x1 + x2) / 2;
+            iconY = (y1 + y2) / 2;
+            break;
+          case "end":
+            iconX = x2;
+            iconY = y2;
+            break;
+          default:
+            // No icon if position not specified
+            break;
+        }
+        
+        // Draw an icon (simple ball) at the specified position if iconPosition is set
+        if (iconPosition && iconPosition !== "none") {
+          svg.append("circle")
+            .attr("cx", iconX)
+            .attr("cy", iconY)
+            .attr("r", 6)
+            .attr("class", "segment-icon")
+            .attr("data-name", segmentName)
+            .style("fill", "white")
+            .style("stroke", color)
+            .style("stroke-width", 2)
+            .style("cursor", "pointer")
+            // .on("mouseover", function() {
+            //   d3.select(this).style("stroke-width", 4).style("r", 8);
+              
+            //   // Determine which dimension(s) and position this icon is related to
+            //   let positionInfo = "";
+            //   if (iconPosition === "start") {
+            //     positionInfo = `${fromDim}:${y1}px`;
+            //   } else if (iconPosition === "end") {
+            //     positionInfo = `${toDim}:${y2}px`;
+            //   } else {
+            //     positionInfo = `Between ${fromDim}:${y1}px and ${toDim}:${y2}px`;
+            //   }
+              
+            //   console.log(`Icon: ${segmentName} | Position: ${positionInfo}`);
+            // })
+            // .on("mouseout", function() {
+            //   d3.select(this).style("stroke-width", 2).style("r", 6);
+            // });
+        }
+        
+        // Add label at specified position along the connection line
+        if (label) {
+          // Calculate label position (interpolate between start and end points)
+          const labelX = x1 + (x2 - x1) * labelPosition;
+          const labelY = y1 + (y2 - y1) * labelPosition;
+          
+          // Create a background for the text that adapts to text length
+          const textLength = label.length * 6;  // Estimate text width
+          
+          svg.append("rect")
+            .attr("x", labelX - (textLength/2 + 5))
+            .attr("y", labelY - 10)
+            .attr("width", textLength + 10)
+            .attr("height", 20)
+            .attr("fill", "white")
+            .attr("opacity", 0.8)
+            .attr("rx", 3);
+          
+          // Add the text label
+          svg.append("text")
+            .attr("x", labelX)
+            .attr("y", labelY + 5)
+            .attr("text-anchor", "middle")
+            .attr("fill", color)
+            .style("font-size", "11px")
+            .style("font-weight", "bold")
+            .text(label);
+        }
+        
+        // Add small labels for intersection distances at each end of the connection line
+        // At start point
+        svg.append("text")
+          .attr("x", x1 + 10)
+          .attr("y", y1)
+          .attr("text-anchor", "start")
+          .attr("dominant-baseline", "middle")
+          .attr("fill", "#666")
+          .style("font-size", "9px")
+          .text(`${y1}px`);
+          
+        // At end point
+        svg.append("text")
+          .attr("x", x2 - 10)
+          .attr("y", y2)
+          .attr("text-anchor", "end")
+          .attr("dominant-baseline", "middle")
+          .attr("fill", "#666")
+          .style("font-size", "9px")
+          .text(`${y2}px`);
+      });
+    });
+
+  }, []);
+
+  return (
+      <div className="w-[30vw] h-full">
+        <svg ref={svgRef} className="w-full h-full"></svg>
+      </div>
+  );
+}
