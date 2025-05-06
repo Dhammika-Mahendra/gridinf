@@ -12,6 +12,14 @@ export default function Home() {
 
   const [options, setOptions] = useState({
     showLabels: true,
+    showg: true,
+    showg2: true,
+    showg3: true,
+    showg4: true,
+    showhp: true,
+    showtp: true,
+    show220: true,
+    show132: true
   });
 
   return (

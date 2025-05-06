@@ -1,17 +1,17 @@
 'use client';
 
 import React from 'react';
+import Selector from './common/Selector';
 
 export default function OptionBox({options,setOptions}) {
 
-const [regionLevel, setRegionLevel] = React.useState("Distribution Division");
+  const handleToggle = (key) => {
+    setOptions((prev) => ({ 
+      ...prev, 
+      [key]: !prev[key] 
+    }));
+  };
 
-const regions = [
-  'Country',
-  'Distribution Division',
-  'Province',
-  'Area',
-];
 
 return (
   <div className='w-[20vw] p-[10px] bg-gray-100'>
@@ -24,33 +24,32 @@ return (
     </ul>
 
     <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
-    <legend className="fieldset-legend">Node types</legend>
-      <label className="label">
-        <input type="checkbox"  className="checkbox" />
-        G
-      </label>
-      <label className="label">
-        <input type="checkbox"  className="checkbox" />
-        Tp
-      </label>
-      <label className="label">
-        <input type="checkbox"  className="checkbox" />
-        Hp
-      </label>
-    </fieldset>
-
-    <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
     <legend className="fieldset-legend">Lables</legend>
       <label className="label">
         <input type="checkbox"  className="checkbox" 
           checked={options.showLabels}
-          onChange={() =>
-            setOptions((prev) => ({ ...prev, showLabels: !prev.showLabels }))
-          }
+          onChange={() => handleToggle('showLabels')}
         />
         show lables
       </label>
     </fieldset>
+
+    <fieldset className="fieldset bg-base-300 border-base-300 rounded-box w-64 border p-4">
+    <legend className="fieldset-legend">Nodes</legend>
+      <Selector type="node" handleToggle={handleToggle} toggleProp="showg" text="Grid Sub Station - 220/132" iconColor="#FFB200"></Selector>
+      <Selector type="node" handleToggle={handleToggle} toggleProp="showg2" text="Grid Sub Station - 132/33" iconColor="#EB5B00"></Selector>
+      <Selector type="node" handleToggle={handleToggle} toggleProp="showg3" text="Grid Sub Station - 220/33" iconColor="#D91656"></Selector>
+      <Selector type="node" handleToggle={handleToggle} toggleProp="showg4" text="Grid Sub Station - 132/11" iconColor="#FA4032"></Selector>
+      <Selector type="node" handleToggle={handleToggle} toggleProp="showhp" text="Hydro Power plant" iconColor="#0595f5"></Selector>
+      <Selector type="node" handleToggle={handleToggle} toggleProp="showtp" text="Thermal Power plant" iconColor="#754a61"></Selector>
+    </fieldset>
+
+    <fieldset className="fieldset bg-base-300 border-base-300 rounded-box w-64 border p-4">
+    <legend className="fieldset-legend">Lines</legend>
+      <Selector type="line" handleToggle={handleToggle} toggleProp="show220" text="220 kV" iconColor="#1d9100"></Selector>
+      <Selector type="line" handleToggle={handleToggle} toggleProp="show132" text="132 kV" iconColor="#38ea28"></Selector>
+    </fieldset>
+
   </div>
 );
 }

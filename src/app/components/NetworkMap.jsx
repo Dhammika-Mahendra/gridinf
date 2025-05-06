@@ -13,11 +13,24 @@ const NetworkMap = ({options}) => {
 
 
   useEffect(() => {
-    // Fetch the network data from external JSON file
+
+    //Loading with local JSON object
+
+    // setIsLoading(true);
+    // const response = await fetch("data.json"); // Path to your network data JSON
+    // if (!response.ok) {
+    //   throw new Error(`Failed to fetch network data: ${response.status}`);
+    // }
+    // const data = await response.json();
+    
+
+    //------------------------------------------------------------------------------------------
+
+    // Fetch the network data from external DB
     const fetchNetworkData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("data.json"); // Path to your network data JSON
+        const response = await fetch("/api/mapData");
         if (!response.ok) {
           throw new Error(`Failed to fetch network data: ${response.status}`);
         }
@@ -102,6 +115,7 @@ const NetworkMap = ({options}) => {
         color: node.color || null,
         size: node.size ,
         label: node.label || "",
+        type : node.type
       }));
 
       const graph = {
@@ -118,11 +132,17 @@ const NetworkMap = ({options}) => {
         node.y = y;
       });
 
-      // Draw links
+      // Draw links----------------------------------------------
+      
+      const filteredLinks = graph.links.filter(function(link) {
+        if (!link.type) return true;
+        const optionName = `show${link.type}`;
+        return options[optionName] === undefined || options[optionName] === true;
+      });
       gNetwork.append("g")
         .attr("class", "links")
         .selectAll("line")
-        .data(graph.links)
+        .data(filteredLinks)
         .enter()
         .append("line")
         .attr("x1", (d) => nodeMap.get(d.source).x)
@@ -132,11 +152,19 @@ const NetworkMap = ({options}) => {
         .attr("stroke", (d) => d.color || "#aaa")
         .attr("stroke-width", (d) => (d.width || 2)/currentTransform.k);
 
-      // Draw nodes
+
+      // Draw nodes----------------------------
+
+      // Filter nodes based on type conditions in options
+      const substationNodes = graph.nodes.filter(function(node) {
+        if (!node.type) return true;
+        const optionName = `show${node.type}`;
+        return options[optionName] === undefined || options[optionName] === true;
+      });
       const nodeCircles = gNetwork.append("g")
         .attr("class", "nodes")
         .selectAll("circle")
-        .data(graph.nodes)
+        .data(substationNodes)
         .enter()
         .append("circle")
         .attr("cx", (d) => d.x)
@@ -190,7 +218,7 @@ const NetworkMap = ({options}) => {
 
     // Prevent scroll wheel page scroll
     svg.on("wheel", (event) => event.preventDefault(), { passive: false });
-  }, [networkData, isLoading, options.showLabels]);
+  }, [networkData, isLoading, options]);
 
   if (error) {
     return <div>Error loading network data: {error}</div>;
