@@ -12,16 +12,29 @@ export default function OptionBox({options,setOptions}) {
     }));
   };
 
+  //change only the selcted property of options
+  const handleRegionalLevel = (e) => {
+    setOptions((prev) => ({ 
+      ...prev, 
+      regionalLevel: e.target.value 
+    }));
+  };
+
 
 return (
   <div className='w-[20vw] p-[10px] bg-gray-100'>
 
-    <ul className="menu menu-sm bg-base-200 rounded-box w-56">
-      <li><a>Country</a></li>
-      <li><a>DD</a></li>
-      <li><a>P</a></li>
-      <li><a>AreaD</a></li>
-    </ul>
+    <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
+      <legend className="fieldset-legend">Reginal level</legend>
+      <select defaultValue="Pick a browser" className="select"
+      onChange={(e) => handleRegionalLevel(e)}>
+        <option>Country</option>
+        <option>Division</option>
+        <option>Province</option>
+        <option>Area</option>
+      </select>
+    </fieldset>
+
 
     <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
     <legend className="fieldset-legend">Lables</legend>

@@ -7,7 +7,7 @@ export async function GET() {
     const client = await clientPromise;
     
     // Get database and collection
-    const db = client.db("GridInf");
+    const db = client.db("GridInf_local");
     const collection1 = db.collection("Nodes");
     const collection2 = db.collection("Links");
     const collection3 = db.collection("Graphs");

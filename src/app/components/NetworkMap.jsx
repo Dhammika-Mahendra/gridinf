@@ -2,12 +2,11 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import rewind from '@turf/rewind';
+import {renderMap} from "../../../lib/mapRender";
 
 const NetworkMap = ({options,data}) => {
   const svgRef = useRef(null);
   const [networkData, setNetworkData] = useState(data);
-  const [isLoading, setIsLoading] = useState(true);
   const [currentTransform, setCurrentTransform] = useState(d3.zoomIdentity);
 
 
@@ -47,121 +46,122 @@ const NetworkMap = ({options,data}) => {
 
     d3.json("/Map.json").then((data) => {
       if (data.type === "FeatureCollection") {
-        const correctedFeatures = data.features.map(feature => rewind(feature, { reverse: true }));
-        const correctedData = { ...data, features: correctedFeatures };
-    
+       
+        const correctedData = renderMap(data, options.regionalLevel);
+        
+        // Clear existing paths
+        gMap.selectAll(".region").remove();
+
+        // Render the map with the merged/unmerged features
         gMap.selectAll(".region")
           .data(correctedData.features)
           .enter()
           .append("path")
           .attr("class", "region")
           .attr("d", pathGenerator)
-          .style("fill", "#eee")
           .style("stroke", "#222")
           .style("stroke-width", 0.1)
           .style("fill", d => {
             let divCode = d.properties.Division_Code;
             return colorCode[divCode] || "#eee";
           });
+          
       } else {
         console.error("Expected GeoJSON of type FeatureCollection, but got:", data.type);
       }
-
-      // After map load, draw network
-      drawNetwork();
     });
 
-    const drawNetwork = () => {
-      // Process nodes - transform lat/lon format from JSON to coordinates format
-      const processedNodes = networkData.nodes.map(node => ({
-        id: node.id,
-        coords: [node.lon, node.lat], // Note: order is [longitude, latitude]
-        color: node.color || null,
-        size: node.size ,
-        label: node.label || "",
-        type : node.type
-      }));
 
-      const graph = {
-        nodes: processedNodes,
-        links: networkData.links
-      };
+    // const drawNetwork = () => {
+    //   // Process nodes - transform lat/lon format from JSON to coordinates format
+    //   const processedNodes = networkData.nodes.map(node => ({
+    //     id: node.id,
+    //     coords: [node.lon, node.lat], // Note: order is [longitude, latitude]
+    //     color: node.color || null,
+    //     size: node.size ,
+    //     label: node.label || "",
+    //     type : node.type
+    //   }));
 
-      const nodeMap = new Map(graph.nodes.map((n) => [n.id, n]));
+    //   const graph = {
+    //     nodes: processedNodes,
+    //     links: networkData.links
+    //   };
 
-      // Project geo coords
-      graph.nodes.forEach((node) => {
-        const [x, y] = projection(node.coords);
-        node.x = x;
-        node.y = y;
-      });
+    //   const nodeMap = new Map(graph.nodes.map((n) => [n.id, n]));
 
-      // Draw links----------------------------------------------
+    //   // Project geo coords
+    //   graph.nodes.forEach((node) => {
+    //     const [x, y] = projection(node.coords);
+    //     node.x = x;
+    //     node.y = y;
+    //   });
+
+    //   // Draw links----------------------------------------------
       
-      const filteredLinks = graph.links.filter(function(link) {
-        if (!link.type) return true;
-        const optionName = `show${link.type}`;
-        return options[optionName] === undefined || options[optionName] === true;
-      });
-      gNetwork.append("g")
-        .attr("class", "links")
-        .selectAll("line")
-        .data(filteredLinks)
-        .enter()
-        .append("line")
-        .attr("x1", (d) => nodeMap.get(d.source).x)
-        .attr("y1", (d) => nodeMap.get(d.source).y)
-        .attr("x2", (d) => nodeMap.get(d.target).x)
-        .attr("y2", (d) => nodeMap.get(d.target).y)
-        .attr("stroke", (d) => d.color || "#aaa")
-        .attr("stroke-width", (d) => (d.width || 2)/currentTransform.k);
+    //   const filteredLinks = graph.links.filter(function(link) {
+    //     if (!link.type) return true;
+    //     const optionName = `show${link.type}`;
+    //     return options[optionName] === undefined || options[optionName] === true;
+    //   });
+    //   gNetwork.append("g")
+    //     .attr("class", "links")
+    //     .selectAll("line")
+    //     .data(filteredLinks)
+    //     .enter()
+    //     .append("line")
+    //     .attr("x1", (d) => nodeMap.get(d.source).x)
+    //     .attr("y1", (d) => nodeMap.get(d.source).y)
+    //     .attr("x2", (d) => nodeMap.get(d.target).x)
+    //     .attr("y2", (d) => nodeMap.get(d.target).y)
+    //     .attr("stroke", (d) => d.color || "#aaa")
+    //     .attr("stroke-width", (d) => (d.width || 2)/currentTransform.k);
 
 
-      // Draw nodes----------------------------
+    //   // Draw nodes----------------------------
 
-      // Filter nodes based on type conditions in options
-      const substationNodes = graph.nodes.filter(function(node) {
-        if (!node.type) return true;
-        const optionName = `show${node.type}`;
-        return options[optionName] === undefined || options[optionName] === true;
-      });
-      const nodeCircles = gNetwork.append("g")
-        .attr("class", "nodes")
-        .selectAll("circle")
-        .data(substationNodes)
-        .enter()
-        .append("circle")
-        .attr("cx", (d) => d.x)
-        .attr("cy", (d) => d.y)
-        .attr("r", (d) => d.size / currentTransform.k)
-        .attr("fill", (d, i) => d.color || d3.schemeCategory10[i % 10]);
+    //   // Filter nodes based on type conditions in options
+    //   const substationNodes = graph.nodes.filter(function(node) {
+    //     if (!node.type) return true;
+    //     const optionName = `show${node.type}`;
+    //     return options[optionName] === undefined || options[optionName] === true;
+    //   });
+    //   const nodeCircles = gNetwork.append("g")
+    //     .attr("class", "nodes")
+    //     .selectAll("circle")
+    //     .data(substationNodes)
+    //     .enter()
+    //     .append("circle")
+    //     .attr("cx", (d) => d.x)
+    //     .attr("cy", (d) => d.y)
+    //     .attr("r", (d) => d.size / currentTransform.k)
+    //     .attr("fill", (d, i) => d.color || d3.schemeCategory10[i % 10]);
 
-      // Hover effect
-      // nodeCircles
-      //   .on("mouseover", function (event, d) {
-      //     d3.select(this).transition().duration(200).attr("r", d.size * 1.5);
-      //   })
-      //   .on("mouseout", function (event, d) {
-      //     d3.select(this).transition().duration(200).attr("r", d.size);
-      //   });
+    //   // Hover effect
+    //   // nodeCircles
+    //   //   .on("mouseover", function (event, d) {
+    //   //     d3.select(this).transition().duration(200).attr("r", d.size * 1.5);
+    //   //   })
+    //   //   .on("mouseout", function (event, d) {
+    //   //     d3.select(this).transition().duration(200).attr("r", d.size);
+    //   //   });
 
-      // Draw labels
-      if(options.showLabels){
-        gNetwork.append("g")
-        .attr("class", "labels")
-        .selectAll("text")
-        .data(graph.nodes)
-        .enter()
-        .append("text")
-        .attr("x", (d) => d.x + 0.2)
-        .attr("y", (d) => d.y + 0.2)
-        .text((d) => d.label)
-        .style("font-size", `${12 / currentTransform.k}px`)
-        .style("fill", "#000");
-      }
+    //   // Draw labels
+    //   if(options.showLabels){
+    //     gNetwork.append("g")
+    //     .attr("class", "labels")
+    //     .selectAll("text")
+    //     .data(graph.nodes)
+    //     .enter()
+    //     .append("text")
+    //     .attr("x", (d) => d.x + 0.2)
+    //     .attr("y", (d) => d.y + 0.2)
+    //     .text((d) => d.label)
+    //     .style("font-size", `${12 / currentTransform.k}px`)
+    //     .style("fill", "#000");
+    //   }
 
-    };
-
+    // };
 
     // Zoom and pan
     const zoom = d3.zoom()
@@ -172,6 +172,7 @@ const NetworkMap = ({options,data}) => {
         const k = event.transform.k;
         gNetwork.selectAll("circle").attr("r", (d) => d.size / k);
         gNetwork.selectAll("text").style("font-size", `${12 / k}px`);
+        //gMap.selectAll(".region-label").style("font-size", `${10 / k}px`);
         gNetwork.selectAll("line").attr("stroke-width", (d) => (d.width || 2) / k);
         setCurrentTransform(event.transform);
       });

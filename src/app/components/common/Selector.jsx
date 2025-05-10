@@ -14,7 +14,7 @@ export default function Selector({text,type,iconColor,handleToggle, toggleProp})
 
     return (
         <div 
-            className={selected ? "badge bg-gray-400" : "badge"}
+            className={selected ? "badge badge-outline" : "badge"}
             onClick={handleClick}
             style={{ cursor: 'pointer' }}
         >

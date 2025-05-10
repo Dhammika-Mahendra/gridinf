@@ -241,3 +241,22 @@ export default function ConnectionChart({data}) {
       </div>
   );
 }
+
+
+
+
+
+
+
+
+
+          gMap.selectAll(".region-label")
+          .data(correctedData.features)
+          .enter()
+          .append("text")
+          .attr("class", "region-label")
+          .attr("transform", d => `translate(${pathGenerator.centroid(d)})`)
+          .attr("text-anchor", "middle")
+          .attr("dy", ".35em")
+          .style("font-size", `${10 / currentTransform.k}px`)
+          .text(d => d.properties.Area_Name);

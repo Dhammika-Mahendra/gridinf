@@ -65,13 +65,13 @@ export default function ConnectionChart({data}) {
         });
         
       // lables
-      svg.append("text")
-        .attr("x", x(dimension))
-        .attr("y", -20)
-        .attr("text-anchor", "mid")
-        .attr("fill", "#000")
-        .style("font-weight", "regular")
-        .text(dimension);
+      // svg.append("text")
+      //   .attr("x", x(dimension))
+      //   .attr("y", -20)
+      //   .attr("text-anchor", "mid")
+      //   .attr("fill", "#000")
+      //   .style("font-weight", "regular")
+      //   .text(dimension);
     }
 
     //--------------------------------------------------------------------------------
