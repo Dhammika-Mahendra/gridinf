@@ -4,52 +4,16 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import rewind from '@turf/rewind';
 
-const NetworkMap = ({options}) => {
+const NetworkMap = ({options,data}) => {
   const svgRef = useRef(null);
-  const [networkData, setNetworkData] = useState(null);
+  const [networkData, setNetworkData] = useState(data);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [currentTransform, setCurrentTransform] = useState(d3.zoomIdentity);
 
 
   useEffect(() => {
-
-    //Loading with local JSON object
-
-    // setIsLoading(true);
-    // const response = await fetch("data.json"); // Path to your network data JSON
-    // if (!response.ok) {
-    //   throw new Error(`Failed to fetch network data: ${response.status}`);
-    // }
-    // const data = await response.json();
-    
-
-    //------------------------------------------------------------------------------------------
-
-    // Fetch the network data from external DB
-    const fetchNetworkData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch("/api/mapData");
-        if (!response.ok) {
-          throw new Error(`Failed to fetch network data: ${response.status}`);
-        }
-        const data = await response.json();
-        setNetworkData(data);
-        setIsLoading(false);
-      } catch (err) {
-        console.error("Error fetching network data:", err);
-        setError(err.message);
-        setIsLoading(false);
-      }
-    };
-
-    fetchNetworkData();
-  }, []);
-
-  useEffect(() => {
     // Only render the visualization when network data is available
-    if (!networkData || isLoading) return;
+    if (!networkData) return;
 
     const width = window.innerWidth*0.5;
     const height = window.innerHeight;
@@ -218,19 +182,8 @@ const NetworkMap = ({options}) => {
 
     // Prevent scroll wheel page scroll
     svg.on("wheel", (event) => event.preventDefault(), { passive: false });
-  }, [networkData, isLoading, options]);
+  }, [networkData,options]);
 
-  if (error) {
-    return <div>Error loading network data: {error}</div>;
-  }
-
-  if (isLoading) {
-    return (
-      <div className="touch-none flex justify-center items-center h-screen w-1/2 bg-[#f8f8f8]">
-        <p>Loading network data...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="touch-none flex justify-center items-center h-screen w-1/2">

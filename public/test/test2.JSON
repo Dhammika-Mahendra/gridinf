@@ -1,0 +1,92 @@
+[
+  {
+    "33": 0,
+    "132": 0,
+    "id": "14",
+    "segments": [
+      {
+        "from": "132",
+        "to": "33",
+        "iconPosition": "mid",
+        "label": "Ambalangoda",
+        "labelPosition": 0.3,
+        "conId": 1
+      }
+    ]
+  },
+  {
+    "33": 40,
+    "132": 40,
+    "id": "132",
+    "segments": [
+      {
+        "from": "132",
+        "to": "33",
+        "iconPosition": "mid",
+        "label": "Ampara",
+        "labelPosition": 0.3,
+        "conId": 2
+      }
+    ]
+  },
+  {
+    "33": 80,
+    "132": 80,
+    "id": "200",
+    "segments": [
+      {
+        "from": "132",
+        "to": "33",
+        "iconPosition": "mid",
+        "label": "Aniyakanda",
+        "labelPosition": 0.3,
+        "conId": 3
+      }
+    ]
+  },
+  {
+    "33": 120,
+    "132": 120,
+    "id": "168",
+    "segments": [
+      {
+        "from": "132",
+        "to": "33",
+        "iconPosition": "mid",
+        "label": "Anuradhapura",
+        "labelPosition": 0.3,
+        "conId": 4
+      }
+    ]
+  },
+  {
+    "33": 160,
+    "132": 160,
+    "id": "2",
+    "segments": [
+      {
+        "from": "132",
+        "to": "33",
+        "iconPosition": "mid",
+        "label": "Athururgiriya",
+        "labelPosition": 0.3,
+        "conId": 5
+      }
+    ]
+  },
+  {
+    "33": 200,
+    "132": 200,
+    "id": "71",
+    "segments": [
+      {
+        "from": "132",
+        "to": "33",
+        "iconPosition": "mid",
+        "label": "Badulla",
+        "labelPosition": 0.3,
+        "conId": 6
+      }
+    ]
+  }
+]

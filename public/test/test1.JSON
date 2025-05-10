@@ -1,0 +1,66 @@
+[
+  {
+    "33": null,
+    "132": null,
+    "_id": "681c4dcf54e0e37e9dd6719e",
+    "id": "14",
+    "segments": [
+      {
+        "from": "132",
+        "to": "33",
+        "iconPosition": "mid",
+        "label": "Ambalangoda",
+        "labelPosition": 0.3,
+        "conId": 1
+      }
+    ]
+  },
+  {
+    "33": null,
+    "132": null,
+    "_id": "681c4dcf54e0e37e9dd6719f",
+    "id": "132",
+    "segments": [
+      {
+        "from": 132,
+        "to": 33,
+        "iconPosition": "mid",
+        "label": "Ampara",
+        "labelPosition": 0.3,
+        "conId": null
+      }
+    ]
+  },
+  {
+    "33": null,
+    "132": null,
+    "_id": "681c4dcf54e0e37e9dd671a0",
+    "id": "200",
+    "segments": [
+      {
+        "from": 132,
+        "to": 33,
+        "iconPosition": "mid",
+        "label": "Aniyakanda",
+        "labelPosition": 0.3,
+        "conId": null
+      }
+    ]
+  },
+  {
+    "33": null,
+    "132": null,
+    "_id": "681c4dcf54e0e37e9dd671a1",
+    "id": "168",
+    "segments": [
+      {
+        "from": 132,
+        "to": 33,
+        "iconPosition": "mid",
+        "label": "Anuradhapura",
+        "labelPosition": 0.3,
+        "conId": null
+      }
+    ]
+  }
+]

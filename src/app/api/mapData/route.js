@@ -10,16 +10,19 @@ export async function GET() {
     const db = client.db("GridInf");
     const collection1 = db.collection("Nodes");
     const collection2 = db.collection("Links");
+    const collection3 = db.collection("Graphs");
     
     // Retrieve all documents from the collection
     const nodeData = await collection1.find({}).toArray();
     const linkData = await collection2.find({}).toArray();
+    const graphData = await collection3.find({}).toArray();
 
     // Create response with CORS headers
     return new NextResponse(
       JSON.stringify({
         nodes: nodeData,
-        links: linkData
+        links: linkData,
+        graph: graphData,
       }),
       {
         status: 200,
