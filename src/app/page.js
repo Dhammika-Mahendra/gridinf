@@ -11,7 +11,8 @@ import { useEffect, useState } from "react";
 export default function Home() {
 
   const [options, setOptions] = useState({
-    showLabels: true,
+    showNodeLabels: true,
+    showRegionLabels :true,
     showg: true,
     showg2: true,
     showg3: true,

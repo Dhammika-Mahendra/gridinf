@@ -25,8 +25,9 @@ return (
   <div className='w-[20vw] p-[10px] bg-gray-100'>
 
     <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
-      <legend className="fieldset-legend">Reginal level</legend>
-      <select defaultValue="Pick a browser" className="select"
+      <legend className="fieldset-legend">Regional level</legend>
+      <select className="select select-sm"
+      value={options.regionalLevel}
       onChange={(e) => handleRegionalLevel(e)}>
         <option>Country</option>
         <option>Division</option>
@@ -39,11 +40,18 @@ return (
     <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
     <legend className="fieldset-legend">Lables</legend>
       <label className="label">
-        <input type="checkbox"  className="checkbox" 
-          checked={options.showLabels}
-          onChange={() => handleToggle('showLabels')}
+        <input type="checkbox"  className="checkbox-sm" 
+          checked={options.showRegionLabels}
+          onChange={() => handleToggle('showRegionLabels')}
         />
-        show lables
+        show region lables
+      </label>
+      <label className="label">
+        <input type="checkbox"  className="checkbox-sm" 
+          checked={options.showNodeLabels}
+          onChange={() => handleToggle('showNodeLabels')}
+        />
+        show node lables
       </label>
     </fieldset>
 
