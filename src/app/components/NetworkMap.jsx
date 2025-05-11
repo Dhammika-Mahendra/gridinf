@@ -41,7 +41,7 @@ const NetworkMap = ({ options, data }) => {
 
         gMap.selectAll("*").remove();
         x = renderRegions(gMap,pathGenerator, correctedData, options.regionalLevel);// Draw regions
-        renderLabels(gMap,pathGenerator, x, currentTransform); // Draw labels
+        renderLabels(gMap,pathGenerator, x, currentTransform,options.regionalLevel); // Draw labels
 
         // Zoom and pan (semantic zooming included)
         const zoom = d3.zoom()
@@ -50,7 +50,7 @@ const NetworkMap = ({ options, data }) => {
             g.attr("transform", event.transform);
             setCurrentTransform(event.transform);
             //render(correctedData, event.transform);
-            renderLabels(gMap,pathGenerator, x, event.transform); // Draw labels
+            renderLabels(gMap,pathGenerator, x, event.transform,options.regionalLevel); // Draw labels
           });
 
         svg.call(zoom);
