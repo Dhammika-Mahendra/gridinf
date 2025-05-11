@@ -21,7 +21,7 @@ export default function Home() {
     showtp: true,
     show220: true,
     show132: true,
-    regionalLevel: "Country",
+    regionalLevel: "Area",
   });
 
   const [loading, setLoading] = useState(true);

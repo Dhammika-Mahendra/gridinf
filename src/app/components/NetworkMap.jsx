@@ -32,20 +32,16 @@ const NetworkMap = ({ options, data }) => {
       .translate([width / 2, height / 2]);
     const pathGenerator = d3.geoPath().projection(projection);
 
-    // Function to render map and labels
-    function render(correctedData, transform) {
-      gMap.selectAll("*").remove();
-      renderRegions(gMap,pathGenerator, correctedData);// Draw regions
-      renderLabels(gMap,pathGenerator, correctedData,transform);// Draw labels
-    }
-
+    let x;
     // Load GeoJSON and draw map
     d3.json("/Map.json").then((data) => {
       if (data.type === "FeatureCollection") {
         const correctedFeatures = data.features.map(feature => rewind(feature, { reverse: true }));
         const correctedData = { ...data, features: correctedFeatures };
 
-        render(correctedData, currentTransform);
+        gMap.selectAll("*").remove();
+        x = renderRegions(gMap,pathGenerator, correctedData, options.regionalLevel);// Draw regions
+        renderLabels(gMap,pathGenerator, x, currentTransform); // Draw labels
 
         // Zoom and pan (semantic zooming included)
         const zoom = d3.zoom()
@@ -53,7 +49,8 @@ const NetworkMap = ({ options, data }) => {
           .on("zoom", (event) => {
             g.attr("transform", event.transform);
             setCurrentTransform(event.transform);
-            render(correctedData, event.transform);
+            //render(correctedData, event.transform);
+            renderLabels(gMap,pathGenerator, x, event.transform); // Draw labels
           });
 
         svg.call(zoom);
