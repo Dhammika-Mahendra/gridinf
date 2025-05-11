@@ -1,150 +1,205 @@
-// In your NextJS component
-import React, { useRef, useEffect, useState } from 'react';
-import * as d3 from 'd3';
-import { 
-  layoutGreedy, 
-  layoutAnnealing, 
-  layoutTextLabel, 
-  layoutRemoveOverlaps 
-} from 'd3fc-label-layout';
+"use client";
 
-const MapWithLabels = ({ geoJsonData, width, height }) => {
+import React, { useEffect, useRef, useState } from "react";
+import * as d3 from "d3";
+import {renderMap} from "../../../lib/mapRender";
+import rewind from '@turf/rewind';
+
+
+const NetworkMap = ({options,data}) => {
   const svgRef = useRef(null);
-  const [currentZoom, setCurrentZoom] = useState(1);
-  
+  const [networkData, setNetworkData] = useState(data);
+  const [currentTransform, setCurrentTransform] = useState(d3.zoomIdentity);
+
+
   useEffect(() => {
-    if (!geoJsonData || !svgRef.current) return;
-    
-    const svg = d3.select(svgRef.current);
-    
-    // Clear previous content
-    svg.selectAll("*").remove();
-    
-    // Create a container for map and labels
-    const container = svg.append("g");
-    
-    // Set up projection and path generator
+    // Only render the visualization when network data is available
+    if (!networkData) return;
+
+    const width = window.innerWidth*0.5;
+    const height = window.innerHeight;
+
+    const svg = d3
+      .select(svgRef.current)
+      .attr("width", width)
+      .attr("height", height)
+      .style("border", "1px solid #ccc");
+
+    svg.selectAll("*").remove(); // Clear SVG before drawing
+
+    // Root group to apply zoom
+    const g = svg.append("g");
+
+    // Separate layers
+    const gMap = g.append("g").attr("class", "map-layer");
+    const gNetwork = g.append("g").attr("class", "network-layer");
+
+    // Projection setup
     const projection = d3.geoMercator()
-      .fitSize([width, height], geoJsonData);
+      .scale(8000)
+      .center([80.64, 7.66])
+      .translate([width/2, height/2]);
+
+    const pathGenerator = d3.geoPath().projection(projection);
+
+    // Load GeoJSON and draw map
+
+    const colorCode ={1: "#C0C0C0", 2: "#A9A9A9", 3: "#B2BEB5", 4: "#D7D7D7", "LECO": "#808080"};
+
+    d3.json("/Map.json").then((data) => {
+      if (data.type === "FeatureCollection") {
+        const correctedFeatures = data.features.map(feature => rewind(feature, { reverse: true }));
+        const correctedData = { ...data, features: correctedFeatures };
     
-    const path = d3.geoPath().projection(projection);
-    
-    // Set up zoom behavior
-    const zoom = d3.zoom()
-      .scaleExtent([1, 8])
-      .on("zoom", (event) => {
-        container.attr("transform", event.transform);
-        setCurrentZoom(event.transform.k);
-        updateLabels(event.transform.k);
-      });
-    
-    svg.call(zoom);
-    
-    // Draw regions
-    container.selectAll("path")
-      .data(geoJsonData.features)
-      .enter()
-      .append("path")
-      .attr("d", path)
-      .attr("fill", "#ccc")
-      .attr("stroke", "#fff");
-    
-    // Extract centroids for labels
-    const labels = geoJsonData.features.map(feature => {
-      const centroid = path.centroid(feature);
-      const bounds = path.bounds(feature);
-      // Calculate region size to prioritize larger regions
-      const size = Math.abs((bounds[1][0] - bounds[0][0]) * (bounds[1][1] - bounds[0][1]));
-      
-      return {
-        x: centroid[0],
-        y: centroid[1],
-        width: feature.properties.name.length * 6, // Approximate text width
-        height: 14, // Approximate text height
-        text: feature.properties.name,
-        size: size  // Store region size for priority
-      };
-    });
-    
-    // Create a container for labels
-    const labelsGroup = container.append("g")
-      .attr("class", "labels");
-    
-    // Function to update labels based on zoom level
-    const updateLabels = (zoomLevel) => {
-      // Filter labels based on zoom level and region size
-      const visibleLabels = labels.filter(label => {
-        // Show larger regions at lower zoom levels, show more as we zoom in
-        const zoomThreshold = Math.max(1, 8 - label.size / 5000);
-        return zoomLevel >= zoomThreshold;
-      });
-      
-      // Configure layout strategy - use different strategies based on zoom
-      let strategy;
-      
-      if (zoomLevel < 2) {
-        // At low zoom, just handle the largest regions with minimal overlap removal
-        strategy = layoutGreedy()
-          .size((d) => [d.width, d.height])
-          .position((d) => [d.x, d.y])
-          .component(layoutTextLabel());
-      } else if (zoomLevel < 4) {
-        // Medium zoom, more aggressive overlap handling
-        strategy = layoutAnnealing()
-          .size((d) => [d.width, d.height])
-          .position((d) => [d.x, d.y])
-          .component(layoutTextLabel())
-          .temperature(1)
-          .cooling(0.95)
-          .iterations(100);
+        gMap.selectAll(".region")
+          .data(correctedData.features)
+          .enter()
+          .append("path")
+          .attr("class", "region")
+          .attr("d", pathGenerator)
+          .style("fill", "#eee")
+          .style("stroke", "#222")
+          .style("stroke-width", 0.1)
+          .style("fill", d => {
+            let divCode = d.properties.Division_Code;
+            return colorCode[divCode] || "#eee";
+          });
+
+          gMap.selectAll(".region-label")
+          .data(correctedData.features)
+          .enter()
+          .append("text")
+          .attr("class", "region-label")
+          .attr("transform", d => `translate(${pathGenerator.centroid(d)})`)
+          .attr("text-anchor", "middle")
+          .attr("dy", ".35em")
+          .style("font-size", `${10 / currentTransform.k}px`)
+          .text(d => d.properties.Area_Name);
       } else {
-        // High zoom, allow more labels with focused overlap removal
-        strategy = layoutRemoveOverlaps()
-          .size((d) => [d.width, d.height])
-          .position((d) => [d.x, d.y])
-          .component(layoutTextLabel());
+        console.error("Expected GeoJSON of type FeatureCollection, but got:", data.type);
       }
+    });
+
+
+    // const drawNetwork = () => {
+    //   // Process nodes - transform lat/lon format from JSON to coordinates format
+    //   const processedNodes = networkData.nodes.map(node => ({
+    //     id: node.id,
+    //     coords: [node.lon, node.lat], // Note: order is [longitude, latitude]
+    //     color: node.color || null,
+    //     size: node.size ,
+    //     label: node.label || "",
+    //     type : node.type
+    //   }));
+
+    //   const graph = {
+    //     nodes: processedNodes,
+    //     links: networkData.links
+    //   };
+
+    //   const nodeMap = new Map(graph.nodes.map((n) => [n.id, n]));
+
+    //   // Project geo coords
+    //   graph.nodes.forEach((node) => {
+    //     const [x, y] = projection(node.coords);
+    //     node.x = x;
+    //     node.y = y;
+    //   });
+
+    //   // Draw links----------------------------------------------
       
-      // Apply the layout strategy
-      const layoutData = strategy(visibleLabels);
-      
-      // Bind labels to DOM
-      const labelSelection = labelsGroup.selectAll("text")
-        .data(layoutData, d => d.text);
-      
-      // Remove old labels
-      labelSelection.exit().remove();
-      
-      // Add new labels
-      labelSelection.enter()
-        .append("text")
-        .attr("x", d => d.x)
-        .attr("y", d => d.y)
-        .attr("text-anchor", "middle")
-        .attr("alignment-baseline", "central")
-        .attr("font-size", d => Math.min(12 * (currentZoom / 2), 14))
-        .text(d => d.text)
-        .style("pointer-events", "none")
-        .style("opacity", d => d.hidden ? 0 : 1);
-      
-      // Update existing labels
-      labelSelection
-        .attr("x", d => d.x)
-        .attr("y", d => d.y)
-        .attr("font-size", d => Math.min(12 * (currentZoom / 2), 14))
-        .style("opacity", d => d.hidden ? 0 : 1);
-    };
-    
-    // Initial label rendering
-    updateLabels(1);
-    
-  }, [geoJsonData, width, height]);
-  
+    //   const filteredLinks = graph.links.filter(function(link) {
+    //     if (!link.type) return true;
+    //     const optionName = `show${link.type}`;
+    //     return options[optionName] === undefined || options[optionName] === true;
+    //   });
+    //   gNetwork.append("g")
+    //     .attr("class", "links")
+    //     .selectAll("line")
+    //     .data(filteredLinks)
+    //     .enter()
+    //     .append("line")
+    //     .attr("x1", (d) => nodeMap.get(d.source).x)
+    //     .attr("y1", (d) => nodeMap.get(d.source).y)
+    //     .attr("x2", (d) => nodeMap.get(d.target).x)
+    //     .attr("y2", (d) => nodeMap.get(d.target).y)
+    //     .attr("stroke", (d) => d.color || "#aaa")
+    //     .attr("stroke-width", (d) => (d.width || 2)/currentTransform.k);
+
+
+    //   // Draw nodes----------------------------
+
+    //   // Filter nodes based on type conditions in options
+    //   const substationNodes = graph.nodes.filter(function(node) {
+    //     if (!node.type) return true;
+    //     const optionName = `show${node.type}`;
+    //     return options[optionName] === undefined || options[optionName] === true;
+    //   });
+    //   const nodeCircles = gNetwork.append("g")
+    //     .attr("class", "nodes")
+    //     .selectAll("circle")
+    //     .data(substationNodes)
+    //     .enter()
+    //     .append("circle")
+    //     .attr("cx", (d) => d.x)
+    //     .attr("cy", (d) => d.y)
+    //     .attr("r", (d) => d.size / currentTransform.k)
+    //     .attr("fill", (d, i) => d.color || d3.schemeCategory10[i % 10]);
+
+    //   // Hover effect
+    //   // nodeCircles
+    //   //   .on("mouseover", function (event, d) {
+    //   //     d3.select(this).transition().duration(200).attr("r", d.size * 1.5);
+    //   //   })
+    //   //   .on("mouseout", function (event, d) {
+    //   //     d3.select(this).transition().duration(200).attr("r", d.size);
+    //   //   });
+
+    //   // Draw labels
+    //   if(options.showLabels){
+    //     gNetwork.append("g")
+    //     .attr("class", "labels")
+    //     .selectAll("text")
+    //     .data(graph.nodes)
+    //     .enter()
+    //     .append("text")
+    //     .attr("x", (d) => d.x + 0.2)
+    //     .attr("y", (d) => d.y + 0.2)
+    //     .text((d) => d.label)
+    //     .style("font-size", `${12 / currentTransform.k}px`)
+    //     .style("fill", "#000");
+    //   }
+
+    // };
+
+    // Zoom and pan
+    const zoom = d3.zoom()
+      .scaleExtent([1, 20])
+      .on("zoom", (event) => {
+        g.attr("transform", event.transform);
+        // Semantic zoom (optional)
+        const k = event.transform.k;
+        gNetwork.selectAll("circle").attr("r", (d) => d.size / k);
+        gNetwork.selectAll("text").style("font-size", `${12 / k}px`);
+        gMap.selectAll(".region-label").style("font-size", `${10 / k}px`);
+        gNetwork.selectAll("line").attr("stroke-width", (d) => (d.width || 2) / k);
+        setCurrentTransform(event.transform);
+      });
+
+
+    svg.call(zoom);
+    svg.call(zoom.transform, currentTransform);
+
+    // Prevent scroll wheel page scroll
+    svg.on("wheel", (event) => event.preventDefault(), { passive: false });
+  }, [networkData,options]);
+
+
   return (
-    <div className="map-container">
-      <svg ref={svgRef} width={width} height={height}></svg>
+    <div className="touch-none flex justify-center items-center h-screen w-1/2">
+      <svg className="SVGelement w-full h-full bg-[#f8f8f8]" ref={svgRef}></svg>
     </div>
   );
 };
 
-export default MapWithLabels;
+export default NetworkMap;
