@@ -55,7 +55,7 @@ return (
       </label>
     </fieldset>
 
-    <fieldset className="fieldset bg-base-300 border-base-300 rounded-box w-64 border p-4">
+    <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
     <legend className="fieldset-legend">Nodes</legend>
       <Selector type="node" handleToggle={handleToggle} toggleProp="showg" text="Grid Sub Station - 220/132" iconColor="#FFB200"></Selector>
       <Selector type="node" handleToggle={handleToggle} toggleProp="showg2" text="Grid Sub Station - 132/33" iconColor="#EB5B00"></Selector>
@@ -65,7 +65,7 @@ return (
       <Selector type="node" handleToggle={handleToggle} toggleProp="showtp" text="Thermal Power plant" iconColor="#754a61"></Selector>
     </fieldset>
 
-    <fieldset className="fieldset bg-base-300 border-base-300 rounded-box w-64 border p-4">
+    <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
     <legend className="fieldset-legend">Lines</legend>
       <Selector type="line" handleToggle={handleToggle} toggleProp="show220" text="220 kV" iconColor="#1d9100"></Selector>
       <Selector type="line" handleToggle={handleToggle} toggleProp="show132" text="132 kV" iconColor="#38ea28"></Selector>
