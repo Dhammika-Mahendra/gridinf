@@ -94,7 +94,10 @@ const NetworkMap = ({ options, data }) => {
             if(options.showRegionLabels){
               renderLabels(gMap,pathGenerator, x, event.transform,options.regionalLevel);
             }
-            updateLabels(y,currentTransform.k)
+            if(options.showNetworkLabels){
+              updateLabels(y,currentTransform.k)
+            }
+            
           });
 
         svg.call(zoom);
