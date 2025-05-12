@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import rewind from '@turf/rewind';
 import { renderRegions , renderLabels } from "../../../lib/mapRender";
-import { renderNetwork } from "../../../lib/networkRender";
+import { renderNetwork, renderNetworkLabels ,updateLabels} from "../../../lib/networkRender";
 
 const NetworkMap = ({ options, data }) => {
   const svgRef = useRef(null);
@@ -35,17 +35,44 @@ const NetworkMap = ({ options, data }) => {
     const pathGenerator = d3.geoPath().projection(projection);
 
     let x;
+    let y;
+    let graphData;
+
     // Load GeoJSON and draw map
     d3.json("/Map.json").then((data) => {
       if (data.type === "FeatureCollection") {
         const correctedFeatures = data.features.map(feature => rewind(feature, { reverse: true }));
         const correctedData = { ...data, features: correctedFeatures };
 
+        //pre processed data object for  network digram
+        const processedNodes = networkData.nodes.map(node => ({
+          id: node.id,
+          coords: [node.lon, node.lat],
+          color: node.color || null,
+          size: node.size ,
+          label: node.name || "",
+          type : node.type
+        }));
+    
+        graphData = {
+          nodes: processedNodes,
+          links: networkData.links
+        };
+
+        graphData.nodes.forEach((node) => {
+          const [x, y] = projection(node.coords);
+          node.x = x;
+          node.y = y;
+        });
+
+
         gMap.selectAll("*").remove();
         x = renderRegions(gMap,pathGenerator, correctedData, options.regionalLevel);// Draw regions
         if(options.showRegionLabels){
           renderLabels(gMap,pathGenerator, x, currentTransform,options.regionalLevel); // Draw labels
         }
+        y= renderNetworkLabels(graphData.nodes, gNetwork,options,currentTransform);
+
 
         // Zoom and pan (semantic zooming included)
         const zoom = d3.zoom()
@@ -55,11 +82,12 @@ const NetworkMap = ({ options, data }) => {
             setCurrentTransform(event.transform);
             const k = event.transform.k;
             gNetwork.selectAll("circle").attr("r", (d) => d.size / k);
-            gNetwork.selectAll("text").style("font-size", `${12 / k}px`);
+            gNetwork.selectAll("text").style("font-size", `${10 / k}px`);
             gNetwork.selectAll("line").attr("stroke-width", (d) => (d.width || 2) / k);
             if(options.showRegionLabels){
               renderLabels(gMap,pathGenerator, x, event.transform,options.regionalLevel);
             }
+
           });
 
         svg.call(zoom);
@@ -69,7 +97,7 @@ const NetworkMap = ({ options, data }) => {
         console.error("Expected GeoJSON of type FeatureCollection, but got:", data.type);
       }
 
-      renderNetwork(networkData, gNetwork,projection, options,currentTransform);
+      renderNetwork(graphData,gNetwork,options,currentTransform);
     });
 
   }, [networkData, options]);
