@@ -37,6 +37,7 @@ const NetworkMap = ({ options, data }) => {
     let x;
     let y;
     let graphData;
+    let graphLabelData;
 
     // Load GeoJSON and draw map
     d3.json("/Map.json").then((data) => {
@@ -65,13 +66,19 @@ const NetworkMap = ({ options, data }) => {
           node.y = y;
         });
 
+        // Filter nodes based on options.show configuration
+        graphLabelData = processedNodes.filter(node => {
+          return options[`show${node.type}`] === true;  
+        });
+        
+        console.log(graphLabelData);
 
         gMap.selectAll("*").remove();
         x = renderRegions(gMap,pathGenerator, correctedData, options.regionalLevel);// Draw regions
         if(options.showRegionLabels){
           renderLabels(gMap,pathGenerator, x, currentTransform,options.regionalLevel); // Draw labels
         }
-        y= renderNetworkLabels(graphData.nodes, gNetwork,options,currentTransform);
+        y= renderNetworkLabels(graphLabelData, gNetwork,options,currentTransform);
 
 
         // Zoom and pan (semantic zooming included)
@@ -87,7 +94,7 @@ const NetworkMap = ({ options, data }) => {
             if(options.showRegionLabels){
               renderLabels(gMap,pathGenerator, x, event.transform,options.regionalLevel);
             }
-
+            updateLabels(y,currentTransform.k)
           });
 
         svg.call(zoom);
