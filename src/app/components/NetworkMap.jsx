@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import rewind from '@turf/rewind';
-import { renderRegions , renderLabels } from "../../../lib/mapRender";
+import { renderRegions , renderRegionLabels } from "../../../lib/mapRender";
 import { renderNetwork, renderNetworkLabels ,updateLabels} from "../../../lib/networkRender";
 
 const NetworkMap = ({ options, data }) => {
@@ -76,7 +76,7 @@ const NetworkMap = ({ options, data }) => {
         gMap.selectAll("*").remove();
         x = renderRegions(gMap,pathGenerator, correctedData, options.regionalLevel);// Draw regions
         if(options.showRegionLabels){
-          renderLabels(gMap,pathGenerator, x, currentTransform,options.regionalLevel); // Draw labels
+          renderRegionLabels(gMap,pathGenerator, x, currentTransform,options.regionalLevel); // Draw region labels
         }
         y= renderNetworkLabels(graphLabelData, gNetwork,options,currentTransform);
 
@@ -92,10 +92,10 @@ const NetworkMap = ({ options, data }) => {
             gNetwork.selectAll("text").style("font-size", `${10 / k}px`);
             gNetwork.selectAll("line").attr("stroke-width", (d) => (d.width || 2) / k);
             if(options.showRegionLabels){
-              renderLabels(gMap,pathGenerator, x, event.transform,options.regionalLevel);
+              renderRegionLabels(gMap,pathGenerator, x, event.transform,options.regionalLevel);
             }
             if(options.showNetworkLabels){
-              updateLabels(y,currentTransform.k)
+              //updateLabels(y,currentTransform.k)
             }
             
           });
