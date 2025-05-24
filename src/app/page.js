@@ -12,7 +12,7 @@ export default function Home() {
 
   const [options, setOptions] = useState({
     showNodeLabels: true,
-    showRegionLabels :true,
+    showRegionLabels :false,
     showg: true,
     showg2: true,
     showg3: true,

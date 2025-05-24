@@ -3,13 +3,12 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import rewind from '@turf/rewind';
 import { renderRegions , renderRegionLabels } from "../../../lib/mapRender";
-import { renderNetwork, renderNetworkLabels ,updateLabels} from "../../../lib/networkRender";
+import { renderNetwork, renderNetworkLabels, updateLabels, updateLabelsVisibility } from "../../../lib/networkRender";
 
 const NetworkMap = ({ options, data }) => {
   const svgRef = useRef(null);
   const [networkData, setNetworkData] = useState(data);
   const [currentTransform, setCurrentTransform] = useState(d3.zoomIdentity);
-
 
   // Main rendering function
   useEffect(() => {
@@ -78,8 +77,7 @@ const NetworkMap = ({ options, data }) => {
         if(options.showRegionLabels){
           renderRegionLabels(gMap,pathGenerator, x, currentTransform,options.regionalLevel); // Draw region labels
         }
-        y= renderNetworkLabels(graphLabelData, gNetwork,options,currentTransform);
-
+        y = renderNetworkLabels(graphLabelData, gNetwork, options, currentTransform);
 
         // Zoom and pan (semantic zooming included)
         const zoom = d3.zoom()
@@ -89,15 +87,14 @@ const NetworkMap = ({ options, data }) => {
             setCurrentTransform(event.transform);
             const k = event.transform.k;
             gNetwork.selectAll("circle").attr("r", (d) => d.size / k);
-            gNetwork.selectAll("text").style("font-size", `${10 / k}px`);
             gNetwork.selectAll("line").attr("stroke-width", (d) => (d.width || 2) / k);
+            
             if(options.showRegionLabels){
               renderRegionLabels(gMap,pathGenerator, x, event.transform,options.regionalLevel);
             }
-            if(options.showNetworkLabels){
-              //updateLabels(y,currentTransform.k)
+            if(options.showNodeLabels && y){
+              updateLabelsVisibility(y, graphLabelData, event.transform);
             }
-            
           });
 
         svg.call(zoom);
@@ -111,8 +108,6 @@ const NetworkMap = ({ options, data }) => {
     });
 
   }, [networkData, options]);
-
-
 
   return (
     <div className="touch-none flex justify-center items-center h-screen w-[80vw]">
