@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import rewind from '@turf/rewind';
 import { renderRegions , renderRegionLabels } from "../../../lib/mapRender";
-import { renderNetwork, renderNetworkLabels, updateLabels, updateLabelsVisibility } from "../../../lib/networkRender";
+import { renderNetwork, renderNetworkLabels, updateLabelsVisibility } from "../../../lib/networkRender";
 
 const NetworkMap = ({ options, data }) => {
   const svgRef = useRef(null);
@@ -110,7 +110,7 @@ const NetworkMap = ({ options, data }) => {
   }, [networkData, options]);
 
   return (
-    <div className="touch-none flex justify-center items-center h-screen w-[80vw]">
+    <div className="touch-none flex justify-center items-center h-screen w-[80vw] cursor-grab">
       <svg className="SVGelement w-full h-full bg-[#f8f8f8]" ref={svgRef}></svg>
     </div>
   );

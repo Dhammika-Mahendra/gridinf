@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import ConnectionChart from './GraphBox/ConnectionChart';
+import ConnectionChart from './ConnectionChart';
 
 const GraphBox = ({graphData}) => {
 
     return (
-        <div className='w-[30vw] p-[10px] h-screen bg-gray-100'>
+        <div className='w-[30vw] h-screen bg-gray-100'>
             <ConnectionChart data={graphData}></ConnectionChart>
         </div>
     );

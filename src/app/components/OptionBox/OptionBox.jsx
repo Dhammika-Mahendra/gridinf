@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Selector from './common/Selector';
+import Selector from '../../components/common/Selector';
 
 export default function OptionBox({options,setOptions}) {
 

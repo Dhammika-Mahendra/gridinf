@@ -1,18 +1,16 @@
 'use client'
 
-import Image from "next/image";
-import D3Chart from "./components/D3Chart";
-import Map from "./components/Map";
 import NetworkMap from "./components/NetworkMap";
-import OptionBox from "./components/OptionBox";
-import GraphBox from "./components/GraphBox";
+import OptionBox from "../app/components/OptionBox/OptionBox";
+import GraphBox from "./components/GraphBox/GraphBox";
+import DrawerToggle from "../app/components/common/DrawerToggle";
 import { useEffect, useState } from "react";
 
 export default function Home() {
 
   const [options, setOptions] = useState({
     showNodeLabels: true,
-    showRegionLabels :false,
+    showRegionLabels: false,
     showg: true,
     showg2: true,
     showg3: true,
@@ -28,6 +26,7 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [mapData, setMapData] = useState([]);
   const [graphData, setGraphData] = useState([]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     fetch('/api/mapData')
@@ -93,19 +92,43 @@ export default function Home() {
   }
 
   return (
-    <div 
-      style={{ 
-        display: "flex", 
-        flexDirection: "row", 
-        alignItems: "stretch", 
-        justifyContent: "center", 
-        height: "100vh",
-        width: "100vw", 
-      }}
-    >
-      {/* <GraphBox graphData={graphData}></GraphBox> */}
-      <NetworkMap options={options} data={mapData}></NetworkMap>
-      <OptionBox options={options} setOptions={setOptions}></OptionBox>
+    <div className="drawer drawer-start">
+      <input 
+        id="graph-drawer" 
+        type="checkbox" 
+        className="drawer-toggle" 
+        checked={drawerOpen}
+        onChange={() => setDrawerOpen(!drawerOpen)}
+      />
+      <div className="drawer-content">
+        {/* Page content */}
+        <div 
+          style={{ 
+            display: "flex", 
+            flexDirection: "row", 
+            alignItems: "stretch", 
+            justifyContent: "center", 
+            height: "100vh",
+            width: "100vw", 
+            position: "relative"
+          }}
+        >
+          {/* Arrow button component */}
+          <DrawerToggle isOpen={drawerOpen} />
+      
+          <NetworkMap options={options} data={mapData}></NetworkMap>
+          <OptionBox options={options} setOptions={setOptions}></OptionBox>
+
+        </div>
+
+          {/* Drawer */}
+      </div>
+      <div className="drawer-side">
+        <label htmlFor="graph-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
+        <div className="w-80 min-h-full bg-base-200 text-base-content">
+          <GraphBox graphData={graphData}></GraphBox>
+        </div>
+      </div>
     </div>
   );
 }

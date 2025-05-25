@@ -186,7 +186,7 @@ export default function ConnectionChart({data}) {
   }, []);
 
   return (
-      <div className="w-[30vw] overflow-y-scroll" style={{ maxHeight: '95vh' }}>
+      <div className="overflow-y-scroll" style={{ maxHeight: '95vh' }}>
         <svg ref={svgRef} className="w-full h-full"></svg>
       </div>
   );
