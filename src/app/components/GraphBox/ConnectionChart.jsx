@@ -9,9 +9,9 @@ export default function ConnectionChart({data}) {
     d3.select(svgRef.current).selectAll("*").remove();
 
     // Chart dimensions
-    const margin = { top: 60, right: 25, bottom: 30, left: 25 };
+    const margin = { top: 40, right: 25, bottom: 30, left: 25 };
     const width = parseInt(window.innerWidth * 0.3) - margin.left - margin.right;
-    const height = 2600 - margin.top - margin.bottom;
+    const height = 2750 - margin.top - margin.bottom;
 
     // Create SVG element
     const svg = d3.select(svgRef.current)
@@ -21,12 +21,12 @@ export default function ConnectionChart({data}) {
 
     // Define fixed heights for each dimension
     const dimensionHeights = {
-      "gen": 2550,
-      "220": 2550,
-      "int": 2550,
-      "132": 2550,
-      "33": 2550,
-      "11": 2550,
+      "gen": 2700,
+      "220": 2700,
+      "int": 2700,
+      "132": 2700,
+      "33": 2700,
+      "11": 2700,
     };
     // Define dimensions for parallel coordinates
     const dimensions = ["gen", "220","int", "132","33","11"];
@@ -186,7 +186,7 @@ export default function ConnectionChart({data}) {
   }, []);
 
   return (
-      <div className="overflow-y-scroll" style={{ maxHeight: '95vh' }}>
+      <div className="overflow-y-scroll" style={{ maxHeight: '98vh' }}>
         <svg ref={svgRef} className="w-full h-full"></svg>
       </div>
   );

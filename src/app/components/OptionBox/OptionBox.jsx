@@ -44,19 +44,19 @@ return (
           checked={options.showRegionLabels}
           onChange={() => handleToggle('showRegionLabels')}
         />
-        show region lables
+        Region lables
       </label>
       <label className="label">
         <input type="checkbox"  className="checkbox-sm" 
           checked={options.showNodeLabels}
           onChange={() => handleToggle('showNodeLabels')}
         />
-        show node lables
+        Grid lables
       </label>
     </fieldset>
 
     <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
-    <legend className="fieldset-legend">Nodes</legend>
+    <legend className="fieldset-legend">Stations</legend>
       <Selector type="node" handleToggle={handleToggle} toggleProp="showg" text="Grid Sub Station - 220/132" iconColor="#FFB200"></Selector>
       <Selector type="node" handleToggle={handleToggle} toggleProp="showg2" text="Grid Sub Station - 132/33" iconColor="#EB5B00"></Selector>
       <Selector type="node" handleToggle={handleToggle} toggleProp="showg3" text="Grid Sub Station - 220/33" iconColor="#D91656"></Selector>
@@ -66,7 +66,7 @@ return (
     </fieldset>
 
     <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
-    <legend className="fieldset-legend">Lines</legend>
+    <legend className="fieldset-legend">Grid Lines</legend>
       <Selector type="line" handleToggle={handleToggle} toggleProp="show220" text="220 kV" iconColor="#1d9100"></Selector>
       <Selector type="line" handleToggle={handleToggle} toggleProp="show132" text="132 kV" iconColor="#38ea28"></Selector>
     </fieldset>

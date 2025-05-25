@@ -125,7 +125,7 @@ export default function Home() {
       </div>
       <div className="drawer-side">
         <label htmlFor="graph-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-        <div className="w-80 min-h-full bg-base-200 text-base-content">
+        <div className="min-h-full bg-base-200 text-base-content">
           <GraphBox graphData={graphData}></GraphBox>
         </div>
       </div>
